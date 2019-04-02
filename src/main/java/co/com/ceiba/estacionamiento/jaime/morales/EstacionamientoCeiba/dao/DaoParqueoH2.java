@@ -21,6 +21,10 @@ public class DaoParqueoH2 implements DaoParqueo{
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
     
+    /**
+     * Metodo que inyecta el data source
+     * @param dataSource
+     */
     @Autowired
     public void setDataSource(DataSource dataSource) {        
         // Manejo de parametros por indice
@@ -36,24 +40,41 @@ public class DaoParqueoH2 implements DaoParqueo{
     
     private static final String SQL_UPDATE_PARQUEO = "UPDATE PARQUEO set fecha_inicial = :fechaInicial, fecha_fin = :fechaFin, costo = :costo, estado = :estado WHERE id_parqueo = :idParqueo";
     
+    /**
+	 * Metodo que inserta un parqueo en la base de datos
+	 * @param parqueo
+	 */
 	@Override
 	public void insertParqueo(Parqueo parqueo) {
 		SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(parqueo);
         this.namedParameterJdbcTemplate.update(SQL_INSERT_PARQUEO, parameterSource);		
 	}
 
+	/**
+	 * Metodo que actualiza un parqueo en la base de datos
+	 * @param parqueo
+	 */
 	@Override
 	public void updateParqueo(Parqueo parqueo) {
 		SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(parqueo);
         this.namedParameterJdbcTemplate.update(SQL_UPDATE_PARQUEO, parameterSource);
 	}
 
+	 /**
+     * Metodo que elimina un parqueo en la base de datos
+     * @param parqueo
+     */
 	@Override
 	public void deleteParqueo(Parqueo parqueo) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+     * Metodo que encuentra un parqueo por el id
+     * @param idParqueo
+     * @return
+     */
 	@Override
 	public Parqueo findParqueoById(long idParqueo) {
 		Parqueo parqueo = null;
@@ -65,12 +86,20 @@ public class DaoParqueoH2 implements DaoParqueo{
         return parqueo;
 	}
 
+	/**
+     * Metodo que retorna un listado de parqueos
+     * @return
+     */
 	@Override
 	public List<Parqueo> findAllParqueos() {
 		RowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);
         return this.jdbcTemplate.query(SQL_SELECT_PARQUEO, parqueoRowMapper);
 	}
 
+	/**
+     * Metodo que cuenta los parqueos registrados en la base de datos
+     * @return
+     */
 	@Override
 	public int countParqueos() {
 		String sql = "SELECT count(*) FROM PARQUEO";
@@ -78,6 +107,11 @@ public class DaoParqueoH2 implements DaoParqueo{
         return this.jdbcTemplate.queryForObject(sql, Integer.class);
 	}
 
+	/**
+     * Metodo que encuentra un parqueo por el idVehiculo
+     * @param idVehiculo
+     * @return
+     */
 	@Override
 	public Parqueo findParqueoByIdVehiculo(int idVehiculo) {
 		Parqueo parqueo = null;

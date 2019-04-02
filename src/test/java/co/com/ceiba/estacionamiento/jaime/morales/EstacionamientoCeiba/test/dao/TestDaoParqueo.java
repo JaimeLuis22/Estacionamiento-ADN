@@ -51,10 +51,11 @@ public class TestDaoParqueo {
 		try {
             System.out.println();
             logger.info("Inicio del test insertarParqueo");
-            
+            // Assert
             // El script de datos tiene 1 registro
             assertEquals(1, daoParqueo.countParqueos());
             
+            // Act
             Parqueo parqueo = new Parqueo();
             parqueo.setFechaInicial("12-12-12");
             parqueo.setEstado("Disponible");
@@ -65,6 +66,7 @@ public class TestDaoParqueo {
             parqueo = daoParqueo.findParqueoById(2);
             logger.info("Parqueo insertado (recuperado por id): \n" + parqueo);
             
+            // Assert
             // Deberian existir 2 parqueos
             assertEquals(2, daoParqueo.countParqueos());
             logger.info("Fin del test insertarParqueo");
@@ -79,9 +81,11 @@ public class TestDaoParqueo {
             System.out.println();
             logger.info("Inicio del test parqueoPorIdVehiculo");
             
+            // Act
             Parqueo parqueo = daoParqueo.findParqueoByIdVehiculo(1);
             logger.info("Parqueo encontrado: \n" + parqueo);
             
+            // Assert
             assertEquals(1, parqueo.getIdParqueo());
             logger.info("Fin del test parqueoPorIdVehiculo");
         } catch (Exception e) {

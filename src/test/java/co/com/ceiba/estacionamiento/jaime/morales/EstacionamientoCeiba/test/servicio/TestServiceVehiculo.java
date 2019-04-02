@@ -22,6 +22,9 @@ public class TestServiceVehiculo {
 	
 	private final Logger logger = LogManager.getRootLogger();
 	
+	/**
+	 * Inyeccion del bean
+	 */
 	@Autowired
     private ServiceVehiculo serviceVehiculo;
 	
@@ -31,7 +34,8 @@ public class TestServiceVehiculo {
         try {
             System.out.println();
             logger.info("Inicio del test listarTodosLosVehiculos");
-
+            
+            // Act
             List<Vehiculo> vehiculos = serviceVehiculo.listarTodosLosVehiculos();
 
             int contadorVehiculos = 0;
@@ -39,7 +43,8 @@ public class TestServiceVehiculo {
                 logger.info("Vehiculo: " + vehiculo);
                 contadorVehiculos++;
             }
-
+            
+            // Assert
             assertEquals(contadorVehiculos, serviceVehiculo.contarVehiculos());
 
             logger.info("Fin del test listarTodosLosVehiculos");
@@ -54,10 +59,12 @@ public class TestServiceVehiculo {
         try {
             System.out.println();
             logger.info("Inicio del test insertarVehiculo");
-
+            
+            // Arrange
             // El script de datos tiene 1 registro
             assertEquals(1, serviceVehiculo.contarVehiculos());
             
+            // Act
             Vehiculo vehiculo = new Vehiculo();
             vehiculo.setPlaca("ndj840");
             vehiculo.setIdTipo(1);
@@ -68,6 +75,7 @@ public class TestServiceVehiculo {
             vehiculo = serviceVehiculo.encontrarVehiculoPorPlaca(vehiculo);
             logger.info("Vehiculo insertado (recuperado por placa): \n" + vehiculo);
             
+            // Assert
             // Deberia existir 2 vehiculos
             assertEquals(2, serviceVehiculo.contarVehiculos());
 
@@ -83,10 +91,12 @@ public class TestServiceVehiculo {
         try {
             System.out.println();
             logger.info("Inicio del test operacionA_Vehiculo");
-
+            
+            // Arrange
             // El script de datos tiene 1 registro
             assertEquals(1, serviceVehiculo.contarVehiculos());
             
+            // Act
             Vehiculo vehiculo = new Vehiculo();
             vehiculo.setPlaca("ndj840");
             vehiculo.setIdTipo(1);
@@ -97,6 +107,7 @@ public class TestServiceVehiculo {
             vehiculo = serviceVehiculo.encontrarVehiculoPorPlaca(vehiculo);
             logger.info("Vehiculo insertado (recuperado por placa): \n" + vehiculo);
             
+            // Assert
             // Deberia existir 2 vehiculos
             assertEquals(2, serviceVehiculo.contarVehiculos());
             
@@ -112,23 +123,17 @@ public class TestServiceVehiculo {
         }
     }
 	
-	private void desplegarVehiculos() {
-		List<Vehiculo> vehiculos = serviceVehiculo.listarTodosLosVehiculos();
-		
-        for (Vehiculo vehiculo : vehiculos) {
-            logger.info("Vehiculo: " + vehiculo);
-        }
-    }
-	
 	@Test
+	@Ignore
     public void reglaPlacaInicioA() {
 		System.out.println();
 		logger.info("Inicio del test reglaPlacaInicioA");
 		
+		// Arrange
 		String mensajeEsperado = "Autorizacion negada";
 		
         try {            
-            
+            // Act
             Vehiculo vehiculo = new Vehiculo();
             vehiculo.setPlaca("AAA123");
             vehiculo.setIdTipo(1);
@@ -137,9 +142,75 @@ public class TestServiceVehiculo {
             
         } catch (Exception e) {
         	logger.error("Excepcion: " +e.getMessage());
+        	
+        	// Assert
         	assertEquals(mensajeEsperado, e.getMessage());
         }
         
         logger.info("Fin del test reglaPlacaInicioA");
+    }
+	
+	@Test
+	@Ignore
+    public void validarVehiculoMoto() {
+		System.out.println();
+		logger.info("Inicio del test validarVehiculoMoto");
+		
+		// Arrange
+		String mensajeEsperado = "Cilindraje vacio";
+		
+        try {            
+            // Act
+            Vehiculo vehiculo = new Vehiculo();
+            vehiculo.setPlaca("qqq123");
+            vehiculo.setIdTipo(2);
+            vehiculo.setIdBahia(1);
+            serviceVehiculo.insertarVehiculo(vehiculo); 
+            
+        } catch (Exception e) {
+        	logger.error("Excepcion: " +e.getMessage());
+        	
+        	// Assert
+        	assertEquals(mensajeEsperado, e.getMessage());
+        }
+        
+        logger.info("Fin del test validarVehiculoMoto");
+    }
+	
+	@Test
+    public void validarBahiaDisponible() {
+		System.out.println();
+		logger.info("Inicio del test validarVehiculoMoto");
+		
+		// Arrange
+		String mensajeEsperado = "No hay bahias disponibles";
+		
+        try {            
+            // Act
+            Vehiculo vehiculo = new Vehiculo();
+            vehiculo.setPlaca("qqq123");
+            vehiculo.setIdTipo(1);
+            vehiculo.setIdBahia(1);
+            serviceVehiculo.insertarVehiculo(vehiculo); 
+            
+        } catch (Exception e) {
+        	logger.error("Excepcion: " +e.getMessage());
+        	
+        	// Assert
+        	assertEquals(mensajeEsperado, e.getMessage());
+        }
+        
+        logger.info("Fin del test validarVehiculoMoto");
+    }
+	
+	/**
+	 * Metodo que ayuda a la impresion de los vehiculos
+	 */
+	private void desplegarVehiculos() {
+		List<Vehiculo> vehiculos = serviceVehiculo.listarTodosLosVehiculos();
+		
+        for (Vehiculo vehiculo : vehiculos) {
+            logger.info("Vehiculo: " + vehiculo);
+        }
     }
 }

@@ -21,6 +21,10 @@ public class DaoBahiaH2 implements DaoBahia{
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
     
+    /**
+     * Metodo que inyecta el data source
+     * @param dataSource
+     */
     @Autowired
     public void setDataSource(DataSource dataSource) {        
         // Manejo de parametros por indice
@@ -36,12 +40,20 @@ public class DaoBahiaH2 implements DaoBahia{
     
     private static final String SQL_UPDATE_BAHIA = "UPDATE BAHIA set numero = :numero, estado = :estado, id_tipo = :idTipo WHERE id_bahia = :idBahia";
 
+    /**
+	 * Metodo para insertar una bahia en la base de datos
+	 * @param bahia
+	 */
 	@Override
 	public void insertBahia(Bahia bahia) {
 		SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(bahia);
         this.namedParameterJdbcTemplate.update(SQL_INSERT_BAHIA, parameterSource);		
 	}
 
+	/**
+	 * Metodo para actualizar una bahia en la base de datos
+	 * @param bahia
+	 */
 	@Override
 	public void updateBahia(Bahia bahia) {
 		SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(bahia);
@@ -49,12 +61,21 @@ public class DaoBahiaH2 implements DaoBahia{
 		
 	}
 
+	/**
+     * Metodo que elimina una bahia en la base de datos
+     * @param bahia
+     */
 	@Override
 	public void deleteBahia(Bahia bahia) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+     * Metodo que encuentra una bahia por el numero
+     * @param bahia
+     * @return
+     */
 	@Override
 	public Bahia findBahiaByNumero(Bahia bahia) {
 		String sql = "SELECT * FROM BAHIA WHERE numero = :numero";
@@ -64,12 +85,20 @@ public class DaoBahiaH2 implements DaoBahia{
         return this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, bahiaRowMapper);
 	}
 
+	/**
+     * Metodo que retorna un listado de bahias
+     * @return
+     */
 	@Override
 	public List<Bahia> findAllBahias() {
 		RowMapper<Bahia> bahiaRowMapper = BeanPropertyRowMapper.newInstance(Bahia.class);
         return this.jdbcTemplate.query(SQL_SELECT_BAHIA, bahiaRowMapper);
 	}
 
+	/**
+     * Metodo que cuenta las bahias registradas en la base de datos
+     * @return
+     */
 	@Override
 	public int countBahias() {
 		String sql = "SELECT count(*) FROM BAHIA";
@@ -77,6 +106,11 @@ public class DaoBahiaH2 implements DaoBahia{
         return this.jdbcTemplate.queryForObject(sql, Integer.class);
 	}
 
+	/**
+     * Metodo que encuentra una bahia por su id
+     * @param idBahia
+     * @return
+     */
 	@Override
 	public Bahia findBahiaById(long idBahia) {
 		Bahia bahia = null;
@@ -86,6 +120,28 @@ public class DaoBahiaH2 implements DaoBahia{
 		bahia = jdbcTemplate.queryForObject(sql, bahiaRowMapper, idBahia);
         
         return bahia;
+	}
+
+	/**
+     * Metodo que cuenta las bahias por el idTipo
+     * @param idTipo
+     * @return
+     */
+	@Override
+	public int countBahiasByIdTipo(int idTipo) {
+		String sql = "SELECT count(*) FROM BAHIA WHERE id_tipo = ?";
+		return this.jdbcTemplate.queryForObject(sql, Integer.class, idTipo);
+	}
+
+	/**
+     * Metodo que cuenta las bahias por el idTipo y su estado
+     * @param idTipo
+     * @return
+     */
+	@Override
+	public int countBahiasByIdTipoState(int idTipo) {
+		String sql = "SELECT count(*) FROM BAHIA WHERE id_tipo = ? AND estado = ?";
+		return this.jdbcTemplate.queryForObject(sql, Integer.class, idTipo, "Disponible");
 	}
 
 	

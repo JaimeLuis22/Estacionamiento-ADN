@@ -21,6 +21,9 @@ public class TestDaoVehiculo {
 
 	private final Logger logger = LogManager.getRootLogger();
 	
+	/**
+	 * Inyeccion del bean
+	 */
 	@Autowired
     private DaoVehiculo daoVehiculo;
 
@@ -29,15 +32,18 @@ public class TestDaoVehiculo {
         try {
             System.out.println();
             logger.info("Inicio del test mostrarVehiculos");
-
+            
+            // Arrange
             List<Vehiculo> vehiculos = daoVehiculo.findAllVehiculos();
 
+            // Act
             int contadorVehiculos = 0;
             for (Vehiculo vehiculo : vehiculos) {
                 logger.info("Vehiculo: " + vehiculo);
                 contadorVehiculos++;
             }
-
+            
+            // Assert
             assertEquals(contadorVehiculos, daoVehiculo.countVehiculos());
 
             logger.info("Fin del test mostrarVehiculos");
@@ -52,9 +58,11 @@ public class TestDaoVehiculo {
             System.out.println();
             logger.info("Inicio del test insertarVehiculo");
             
+            // Arrange
             // El script de datos tiene 1 registro
             assertEquals(1, daoVehiculo.countVehiculos());
             
+            // Act
             Vehiculo vehiculo = new Vehiculo();
             vehiculo.setPlaca("uyt122");
             vehiculo.setIdTipo(1);
@@ -65,6 +73,7 @@ public class TestDaoVehiculo {
             vehiculo = daoVehiculo.findVehiculoByPlaca(vehiculo);
             logger.info("Vehiculo insertado (recuperado por placa): \n" + vehiculo);
             
+            // Assert
             // Deberia existir 2 vehiculos
             assertEquals(2, daoVehiculo.countVehiculos());
             logger.info("Fin del test insertarVehiculo");

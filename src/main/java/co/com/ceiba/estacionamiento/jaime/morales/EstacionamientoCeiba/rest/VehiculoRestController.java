@@ -17,9 +17,16 @@ import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.servicio.
 @RestController
 public class VehiculoRestController {
 
+	/**
+	 * Inyeccion del bean
+	 */
 	@Autowired
 	ServiceVehiculo serviceVehiculo;
 	
+	/**
+	 * Metodo que representa el listado de vehiclulos
+	 * @return
+	 */
 	@RequestMapping(value = "/vehiculos", method = RequestMethod.GET)
     public ResponseEntity<List<Vehiculo>> obtenerVehiculos() {
 		List<Vehiculo> lista = null;
@@ -36,6 +43,11 @@ public class VehiculoRestController {
         return new ResponseEntity<List<Vehiculo>>(lista, HttpStatus.OK);
     }
      
+	/**
+	 * Metodo que representa el registro de un vehiculo
+	 * @param vehiculo
+	 * @return
+	 */
     @RequestMapping(value = "/registro-vehiculo", method = RequestMethod.POST)
     public ResponseEntity<DTOResponse> registrarVehiculo(@RequestBody Vehiculo vehiculo) {
     	DTOResponse response = new DTOResponse();
@@ -43,6 +55,7 @@ public class VehiculoRestController {
     	try {
 			serviceVehiculo.insertarVehiculo(vehiculo);
 			response.setMensaje("Registro Exitoso");
+			response.setCodigo(HttpStatus.OK.value());
 		} catch (Exception e) {
 			response.setMensaje(e.getMessage());
 			return new ResponseEntity<DTOResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -51,9 +64,22 @@ public class VehiculoRestController {
         return new ResponseEntity<DTOResponse>(response, HttpStatus.OK);
     }
     
+    /**
+     * Metodo que representa la salida de un vehiculo
+     * @param vehiculo
+     * @return
+     */
     @RequestMapping(value = "/salida-vehiculo", method = RequestMethod.POST)
     public ResponseEntity<DTOResponse> salidaVehiculo(@RequestBody Vehiculo vehiculo) {
+    	DTOResponse response = new DTOResponse();
     	
-        return new ResponseEntity<DTOResponse>(HttpStatus.OK);
+    	try {
+    		double costo = serviceVehiculo.salidaVehiculo(vehiculo);
+    		response.setMensaje(String.valueOf(costo));
+			response.setCodigo(HttpStatus.OK.value());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+        return new ResponseEntity<DTOResponse>(response, HttpStatus.OK);
     }
 }

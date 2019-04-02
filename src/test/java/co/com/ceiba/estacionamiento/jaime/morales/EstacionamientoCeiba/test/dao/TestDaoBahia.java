@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class TestDaoBahia {
 
 	private final Logger logger = LogManager.getRootLogger();
 	
+	/**
+	 * Inyeccion del bean
+	 */
 	@Autowired
     private DaoBahia daoBahia;
 	
@@ -29,7 +33,8 @@ public class TestDaoBahia {
         try {
             System.out.println();
             logger.info("Inicio del test mostrarBahias");
-
+            
+            // Act
             List<Bahia> bahias = daoBahia.findAllBahias();
 
             int contadorBahias = 0;
@@ -38,6 +43,7 @@ public class TestDaoBahia {
                 contadorBahias++;
             }
 
+            // Assert
             assertEquals(contadorBahias, daoBahia.countBahias());
 
             logger.info("Fin del test mostrarBahias");
@@ -52,9 +58,11 @@ public class TestDaoBahia {
             System.out.println();
             logger.info("Inicio del test insertarBahia");
             
+            // Arrange
             // El script de datos tiene 1 registro
             assertEquals(1, daoBahia.countBahias());
             
+            // Act
             Bahia bahia = new Bahia();
             bahia.setNumero(2);
             bahia.setEstado("Disponible");
@@ -65,6 +73,7 @@ public class TestDaoBahia {
             bahia = daoBahia.findBahiaByNumero(bahia);
             logger.info("Bahia insertada (recuperada por numero): \n" + bahia);
             
+            // Assert
             // Deberia existir 2 bahias
             assertEquals(2, daoBahia.countBahias());
             logger.info("Fin del test insertarBahia");
@@ -72,5 +81,58 @@ public class TestDaoBahia {
             logger.error("Error JBDC", e);
         }
     }
-
+	
+	@Test
+    public void contarBahiaPorIdTipo() {
+		try {
+            System.out.println();
+            logger.info("Inicio del test contarBahiaPorIdTipo");
+            
+            // Arrange
+            int idTipo = 1;
+            
+            // Act
+            List<Bahia> bahias = daoBahia.findAllBahias();
+            int contadorBahias = 0;
+            for (Bahia bahia : bahias) {
+            	if(bahia.getIdTipo() == idTipo) {
+            		logger.info("Bahia: " + bahia);               
+                	contadorBahias++;
+                }                
+            }
+            
+            // Assert
+            assertEquals(contadorBahias, daoBahia.countBahiasByIdTipo(idTipo));
+            logger.info("Fin del test contarBahiaPorIdTipo");
+        } catch (Exception e) {
+            logger.error("Error JBDC", e);
+        }
+    }
+	
+	@Test
+    public void contarBahiaPorIdTipoEstado() {
+		try {
+            System.out.println();
+            logger.info("Inicio del test contarBahiaPorIdTipoEstado");
+            
+            // Arrange
+            int idTipo = 1;
+            
+            // Act
+            List<Bahia> bahias = daoBahia.findAllBahias();
+            int contadorBahias = 0;
+            for (Bahia bahia : bahias) {
+            	if(bahia.getIdTipo() == idTipo && bahia.getEstado().equals("Disponible")) {
+            		logger.info("Bahia: " + bahia);               
+                	contadorBahias++;
+                }                
+            }
+            
+            // Assert
+            assertEquals(contadorBahias, daoBahia.countBahiasByIdTipoState(idTipo));
+            logger.info("Fin del test contarBahiaPorIdTipoEstado");
+        } catch (Exception e) {
+            logger.error("Error JBDC", e);
+        }
+    }
 }

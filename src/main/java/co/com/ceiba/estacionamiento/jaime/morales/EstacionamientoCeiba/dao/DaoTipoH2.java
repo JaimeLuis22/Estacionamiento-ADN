@@ -21,6 +21,10 @@ public class DaoTipoH2 implements DaoTipo{
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
     
+    /**
+     * Metodo que inyecta el data source
+     * @param dataSource
+     */
     @Autowired
     public void setDataSource(DataSource dataSource) {        
         // Manejo de parametros por indice
@@ -36,12 +40,20 @@ public class DaoTipoH2 implements DaoTipo{
     
     private static final String SQL_UPDATE_TIPO = "UPDATE TIPO set nombre = :nombre WHERE id_tipo = :idTipo";
 
+    /**
+	 * Metodo que inserta un tipo en la base de datos
+	 * @param tipo
+	 */
 	@Override
 	public void insertTipo(Tipo tipo) {
 		SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(tipo);
         this.namedParameterJdbcTemplate.update(SQL_INSERT_TIPO, parameterSource);		
 	}
 
+	/**
+	 * Metodo que actualiza un tipo en la base de datos
+	 * @param tipo
+	 */
 	@Override
 	public void updateTipo(Tipo tipo) {
 		SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(tipo);
@@ -49,12 +61,21 @@ public class DaoTipoH2 implements DaoTipo{
 		
 	}
 
+	/**
+     * Metodo que elimina un tipo en la base de datos
+     * @param tipo
+     */
 	@Override
 	public void deleteTipo(Tipo tipo) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+     * Metodo que encuentra un tipo por el nombre
+     * @param tipo
+     * @return
+     */
 	@Override
 	public Tipo findTipoByNombre(Tipo tipo) {
 		String sql = "SELECT * FROM TIPO WHERE nombre = :nombre";
@@ -64,12 +85,20 @@ public class DaoTipoH2 implements DaoTipo{
         return this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, tipoRowMapper);
 	}
 
+	/**
+     * Metodo que retorna un listado de tipos de la base de datos
+     * @return
+     */
 	@Override
 	public List<Tipo> findAllTipos() {
         RowMapper<Tipo> tipoRowMapper = BeanPropertyRowMapper.newInstance(Tipo.class);
         return this.jdbcTemplate.query(SQL_SELECT_TIPO, tipoRowMapper);
 	}
 
+	/**
+     * Metodo que cuenta los tipos registrados en la base de datos
+     * @return
+     */
 	@Override
 	public int countTipos() {
 		String sql = "SELECT count(*) FROM TIPO";
@@ -77,6 +106,11 @@ public class DaoTipoH2 implements DaoTipo{
         return this.jdbcTemplate.queryForObject(sql, Integer.class);
 	}
 
+	/**
+     * Metodo que encuentra un tipo por el id
+     * @param idTipo
+     * @return
+     */
 	@Override
 	public Tipo findTipoById(long idTipo) {
 		Tipo tipo = null;

@@ -21,6 +21,9 @@ public class TestDaoTipo {
 	
 	private final Logger logger = LogManager.getRootLogger();
 	
+	/**
+	 * Inyeccion del bean
+	 */
 	@Autowired
     private DaoTipo daoTipo;
 
@@ -29,15 +32,17 @@ public class TestDaoTipo {
         try {
             System.out.println();
             logger.info("Inicio del test mostrarTipos");
-
+            
+            // Act
             List<Tipo> tipos = daoTipo.findAllTipos();
-
+            
             int contadorTipos = 0;
             for (Tipo tipo : tipos) {
                 logger.info("Tipo: " + tipo);
                 contadorTipos++;
             }
 
+            // Assert
             assertEquals(contadorTipos, daoTipo.countTipos());
 
             logger.info("Fin del test mostrarTipos");
@@ -52,9 +57,11 @@ public class TestDaoTipo {
             System.out.println();
             logger.info("Inicio del test insertarTipo");
             
+            // Arrange
             // El script de datos tiene 1 registro
-            assertEquals(1, daoTipo.countTipos());
+            assertEquals(2, daoTipo.countTipos());
             
+            // Act
             Tipo tipo = new Tipo();
             tipo.setNombre("Moto");
             daoTipo.insertTipo(tipo);
@@ -63,9 +70,31 @@ public class TestDaoTipo {
             tipo = daoTipo.findTipoByNombre(tipo);
             logger.info("Tipo insertado (recuperado por nombre): \n" + tipo);
             
+            // Assert
             // Deberia existir 2 tipos
-            assertEquals(2, daoTipo.countTipos());
+            assertEquals(3, daoTipo.countTipos());
             logger.info("Fin del test insertarTipo");
+        } catch (Exception e) {
+            logger.error("Error JBDC", e);
+        }
+    }
+	
+	@Test
+    public void buscarTipoPorId() {
+		try {
+            System.out.println();
+            logger.info("Inicio del test buscarTipoPorId");
+            
+            // Act
+            int idTipo = 2;
+            String nombre = "Moto";
+            
+            logger.info(daoTipo.findTipoById((long)idTipo).getNombre());
+            
+            // Assert
+            // Deberia existir 2 tipos
+            assertEquals(nombre, daoTipo.findTipoById(idTipo).getNombre());
+            logger.info("Fin del test buscarTipoPorId");
         } catch (Exception e) {
             logger.error("Error JBDC", e);
         }

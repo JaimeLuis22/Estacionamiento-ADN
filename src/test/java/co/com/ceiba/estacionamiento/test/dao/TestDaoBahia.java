@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.test.dao;
+package co.com.ceiba.estacionamiento.test.dao;
 
 import static org.junit.Assert.*;
 
@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dao.DaoBahia;
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio.Bahia;
+import co.com.ceiba.estacionamiento.dao.DaoBahia;
+import co.com.ceiba.estacionamiento.dominio.Bahia;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})

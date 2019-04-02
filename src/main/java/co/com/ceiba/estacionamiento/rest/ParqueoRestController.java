@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.rest;
+package co.com.ceiba.estacionamiento.rest;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio.Parqueo;
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.servicio.ServiceParqueo;
+import co.com.ceiba.estacionamiento.dominio.Parqueo;
+import co.com.ceiba.estacionamiento.servicio.ServiceParqueo;
 
 @RestController
 public class ParqueoRestController {

@@ -13,8 +13,8 @@
                 		   http://www.springframework.org/schema/beans/spring-beans.xsd">
     
     <!-- Permite la utilizacion de anotaciones -->
-    <context:component-scan base-package="co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dao" />
-    <context:component-scan base-package="co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.servicio" />
+    <context:component-scan base-package="co.com.ceiba.estacionamiento.dao" />
+    <context:component-scan base-package="co.com.ceiba.estacionamiento.servicio" />
 
 	<!-- Base de datos embebida -->
     <jdbc:embedded-database id="dataSource" type="H2">

@@ -1,14 +1,14 @@
-package co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.servicio;
+package co.com.ceiba.estacionamiento.servicio;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dao.DaoBahia;
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dao.DaoTipo;
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio.Bahia;
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio.Tipo;
+import co.com.ceiba.estacionamiento.dao.DaoBahia;
+import co.com.ceiba.estacionamiento.dao.DaoTipo;
+import co.com.ceiba.estacionamiento.dominio.Bahia;
+import co.com.ceiba.estacionamiento.dominio.Tipo;
 
 @Service
 public class ServiceBahiaContrato implements ServiceBahia{

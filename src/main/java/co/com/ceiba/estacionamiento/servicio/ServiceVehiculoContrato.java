@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.servicio;
+package co.com.ceiba.estacionamiento.servicio;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -10,14 +10,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dao.DaoBahia;
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dao.DaoParqueo;
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dao.DaoTipo;
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dao.DaoVehiculo;
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio.Bahia;
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio.Parqueo;
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio.Tipo;
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio.Vehiculo;
+import co.com.ceiba.estacionamiento.dao.DaoBahia;
+import co.com.ceiba.estacionamiento.dao.DaoParqueo;
+import co.com.ceiba.estacionamiento.dao.DaoTipo;
+import co.com.ceiba.estacionamiento.dao.DaoVehiculo;
+import co.com.ceiba.estacionamiento.dominio.Bahia;
+import co.com.ceiba.estacionamiento.dominio.Parqueo;
+import co.com.ceiba.estacionamiento.dominio.Tipo;
+import co.com.ceiba.estacionamiento.dominio.Vehiculo;
 
 @Service
 public class ServiceVehiculoContrato implements ServiceVehiculo {

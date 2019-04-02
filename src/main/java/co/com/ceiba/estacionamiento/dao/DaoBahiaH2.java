@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dao;
+package co.com.ceiba.estacionamiento.dao;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio.Bahia;
+import co.com.ceiba.estacionamiento.dominio.Bahia;
 
 @Repository
 public class DaoBahiaH2 implements DaoBahia{
@@ -67,8 +67,7 @@ public class DaoBahiaH2 implements DaoBahia{
      */
 	@Override
 	public void deleteBahia(Bahia bahia) {
-		// TODO Auto-generated method stub
-		
+		// En esta fase no se implementará		
 	}
 
 	/**

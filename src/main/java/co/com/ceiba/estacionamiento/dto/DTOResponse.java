@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dto;
+package co.com.ceiba.estacionamiento.dto;
 
 public class DTOResponse {
 	

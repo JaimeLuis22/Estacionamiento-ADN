@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba;
+package co.com.ceiba.estacionamiento;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,6 +10,10 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource({"classpath*:applicationContext.xml"})
 public class EstacionamientoCeibaApplication {
 
+	/**
+	 * Metodo que ejecuta la aplicacion
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(EstacionamientoCeibaApplication.class, args);
 	}

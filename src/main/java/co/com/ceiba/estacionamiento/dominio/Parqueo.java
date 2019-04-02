@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio;
+package co.com.ceiba.estacionamiento.dominio;
 
 public class Parqueo {
 
@@ -36,7 +36,7 @@ public class Parqueo {
 	 * Constructor
 	 */
 	public Parqueo() {
-		
+		// Constructor vacio para que cumpla con las indicaciones de un bean
 	}
 
 	/**

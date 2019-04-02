@@ -1,8 +1,8 @@
-package co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.servicio;
+package co.com.ceiba.estacionamiento.servicio;
 
 import java.util.List;
 
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio.Vehiculo;
+import co.com.ceiba.estacionamiento.dominio.Vehiculo;
 
 public interface ServiceVehiculo {
 

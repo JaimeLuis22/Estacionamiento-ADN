@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dao;
+package co.com.ceiba.estacionamiento.dao;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio.Parqueo;
+import co.com.ceiba.estacionamiento.dominio.Parqueo;
 
 @Repository
 public class DaoParqueoH2 implements DaoParqueo{

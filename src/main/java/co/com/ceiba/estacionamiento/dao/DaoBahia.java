@@ -1,8 +1,8 @@
-package co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dao;
+package co.com.ceiba.estacionamiento.dao;
 
 import java.util.List;
 
-import co.com.ceiba.estacionamiento.jaime.morales.EstacionamientoCeiba.dominio.Bahia;
+import co.com.ceiba.estacionamiento.dominio.Bahia;
 
 public interface DaoBahia {
 	

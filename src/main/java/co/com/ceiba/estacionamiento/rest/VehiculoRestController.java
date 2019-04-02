@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -87,13 +88,13 @@ public class VehiculoRestController {
     			contenedor.setPayload(respuestaGenerica);
     			
     			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.UNAUTHORIZED);
-			} else {
-				respuestaGenerica.setMensaje("Error Interno");
-				respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-				contenedor.setPayload(respuestaGenerica);
+			}
+			
+			respuestaGenerica.setMensaje("Error Interno");
+			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			contenedor.setPayload(respuestaGenerica);
 				
-				return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
-			}		
+			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);		
 		}
     	return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
     }
@@ -114,7 +115,49 @@ public class VehiculoRestController {
     		respuestaGenerica.setMensaje(String.valueOf(costo));
     		respuestaGenerica.setCodigo(HttpStatus.OK.value());
     		contenedor.setPayload(respuestaGenerica);
-		} catch (Exception e) {
+		} catch (EstacionamientoException ex) {
+			if(ex.getCodigo() == HttpStatus.BAD_REQUEST.value()) {
+				respuestaGenerica.setMensaje(ex.getMensaje());
+    			respuestaGenerica.setCodigo(ex.getCodigo());
+    			contenedor.setPayload(respuestaGenerica);
+    			
+    			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.BAD_REQUEST);
+			}
+		
+			respuestaGenerica.setMensaje("Error Interno");
+			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			contenedor.setPayload(respuestaGenerica);
+			
+			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+        return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
+    }
+    
+    /**
+     * Metodo que obtiene un vehiculo por su placa
+     * @param placa
+     * @return
+     */
+    @RequestMapping(value = "/vehiculo-placa/{placa}", method = RequestMethod.GET)
+    public ResponseEntity<DTOResponseContainer> obtenerVehiculoPorPlaca(@PathVariable("placa") String placa) {
+    	DTOResponseContainer contenedor = new DTOResponseContainer();
+		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
+    	
+    	try {
+    		Vehiculo vehiculo = new Vehiculo();
+    		vehiculo.setPlaca(placa);
+    		vehiculo = serviceVehiculo.encontrarVehiculoPorPlaca(vehiculo);
+    		
+    		contenedor.setPayload(vehiculo);
+		} catch (EstacionamientoException ex) {
+			if(ex.getCodigo() == HttpStatus.BAD_REQUEST.value()) {
+				respuestaGenerica.setMensaje(ex.getMensaje());
+    			respuestaGenerica.setCodigo(ex.getCodigo());
+    			contenedor.setPayload(respuestaGenerica);
+    			
+    			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.BAD_REQUEST);
+			}
+			
 			respuestaGenerica.setMensaje("Error Interno");
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);

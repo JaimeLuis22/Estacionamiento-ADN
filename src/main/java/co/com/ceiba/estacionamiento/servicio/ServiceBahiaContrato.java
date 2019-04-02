@@ -37,11 +37,11 @@ public class ServiceBahiaContrato implements ServiceBahia{
 		Tipo tipo = daoTipo.findTipoById((long)bahia.getIdTipo());
 		int numeroBahias = daoBahia.countBahiasByIdTipo(bahia.getIdTipo());
 		
-		if(tipo.getNombre().equals("Carro") && numeroBahias > 20) {
+		if("Carro".equals(tipo.getNombre()) && numeroBahias > 20) {
 			throw new EstacionamientoException("No se puede registrar. Ha superado el limite de inserciones", ErrorCodes.ERROR_NEG_401.getCodigo());
 		}
 		
-		if(tipo.getNombre().equals("Moto") && numeroBahias > 10) {
+		if("Moto".equals(tipo.getNombre()) && numeroBahias > 10) {
 			throw new EstacionamientoException("No se puede registrar. Ha superado el limite de inserciones", ErrorCodes.ERROR_NEG_401.getCodigo());
 		}
 		

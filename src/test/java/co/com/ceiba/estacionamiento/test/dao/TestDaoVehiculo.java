@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.com.ceiba.estacionamiento.dao.DaoVehiculo;
 import co.com.ceiba.estacionamiento.dominio.Vehiculo;
@@ -53,6 +54,7 @@ public class TestDaoVehiculo {
     }
 	
 	@Test
+	@Transactional
     public void insertarVehiculo() {
 		try {
             System.out.println();
@@ -82,4 +84,26 @@ public class TestDaoVehiculo {
         }
     }
 
+	@Test
+	@Transactional
+	public void buscarVehiculoPorPlaca() {
+		try {
+            System.out.println();
+            logger.info("Inicio del test buscarVehiculoPorPlaca");
+            
+            // Act
+            Vehiculo vehiculo = new Vehiculo();
+            vehiculo.setPlaca("uyt122");
+            vehiculo.setIdTipo(1);
+            vehiculo.setIdBahia(1);
+            
+            // Assert
+            assertNull(daoVehiculo.findVehiculoByPlaca(vehiculo));
+            logger.info(vehiculo);
+            
+            logger.info("Fin del test buscarVehiculoPorPlaca");
+        } catch (Exception e) {
+            logger.error("Error JBDC", e);
+        }
+	}
 }

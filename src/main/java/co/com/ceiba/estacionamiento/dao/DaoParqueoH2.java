@@ -87,7 +87,8 @@ public class DaoParqueoH2 implements DaoParqueo{
 			BeanPropertyRowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);   
 			parqueo = jdbcTemplate.queryForObject(sql, parqueoRowMapper, idParqueo);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EstacionamientoException(e.getMessage(), ErrorCodes.ERROR_NEG_402.getCodigo());
+			//throw new EstacionamientoException(e.getMessage(), ErrorCodes.ERROR_NEG_402.getCodigo());
+			parqueo = null;
 		}	
         
         return parqueo;

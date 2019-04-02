@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.com.ceiba.estacionamiento.dao.DaoTipo;
 import co.com.ceiba.estacionamiento.dominio.Tipo;
@@ -52,6 +53,7 @@ public class TestDaoTipo {
     }
 	
 	@Test
+	@Transactional
     public void insertarTipo() {
 		try {
             System.out.println();
@@ -63,7 +65,7 @@ public class TestDaoTipo {
             
             // Act
             Tipo tipo = new Tipo();
-            tipo.setNombre("Moto");
+            tipo.setNombre("Bicicleta");
             daoTipo.insertTipo(tipo);
 
             //Recuperamos el tipo recien insertado por su nombre 
@@ -86,8 +88,8 @@ public class TestDaoTipo {
             logger.info("Inicio del test buscarTipoPorId");
             
             // Act
-            int idTipo = 2;
-            String nombre = "Moto";
+            int idTipo = 1;
+            String nombre = "Carro";
             
             logger.info(daoTipo.findTipoById((long)idTipo).getNombre());
             

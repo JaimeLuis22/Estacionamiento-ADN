@@ -5,6 +5,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -87,8 +88,9 @@ public class DaoVehiculoH2 implements DaoVehiculo{
 	        
 	        RowMapper<Vehiculo> vehiculoRowMapper = BeanPropertyRowMapper.newInstance(Vehiculo.class);
 	        vehiculoR = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, vehiculoRowMapper);
-		} catch (Exception e) {
-			throw new EstacionamientoException(e.getMessage(), ErrorCodes.ERROR_NEG_402.getCodigo());
+		} catch (EmptyResultDataAccessException e) {
+			//throw new EstacionamientoException(e.getMessage(), ErrorCodes.ERROR_NEG_402.getCodigo());
+			vehiculoR = null;
 		}
         
         return vehiculoR;

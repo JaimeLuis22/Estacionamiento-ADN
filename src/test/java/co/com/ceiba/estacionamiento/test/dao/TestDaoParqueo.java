@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.com.ceiba.estacionamiento.dao.DaoParqueo;
 import co.com.ceiba.estacionamiento.dominio.Parqueo;
@@ -47,6 +48,7 @@ public class TestDaoParqueo {
     }
 	
 	@Test
+	@Transactional
     public void insertarParqueo() {
 		try {
             System.out.println();

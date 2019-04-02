@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.stereotype.Service;
 
 import co.com.ceiba.estacionamiento.dao.DaoBahia;
@@ -22,8 +24,9 @@ import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 import co.com.ceiba.estacionamiento.excepcion.error.ErrorCodes;
 
 @Service
+@Transactional(propagation=Propagation.SUPPORTS, readOnly=true) 
 public class ServiceVehiculoContrato implements ServiceVehiculo {
-
+	
 	/**
 	 * Inyeccion del bean
 	 */
@@ -53,13 +56,14 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 	 * @param vehiculo
 	 * @throws Exception
 	 */
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	@Override
 	public void insertarVehiculo(Vehiculo vehiculo) throws EstacionamientoException {
 		Date fechaSistema = new Date();
 		
 		// Validaciones
 		validarPlaca(vehiculo.getPlaca().toLowerCase(), fechaSistema);
-		validarVehiculo(vehiculo);
+		validarVehiculoEntrada(vehiculo);
 		validarBahia(vehiculo.getIdTipo());
 		
 		// Insertar vehiculo
@@ -78,6 +82,7 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 	 * Metodo que actualiza un vehiculo
 	 * @param vehiculo
 	 */
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	@Override
 	public void actualizarVehiculo(Vehiculo vehiculo) {
 		daoVehiculo.updateVehiculo(vehiculo);
@@ -99,7 +104,12 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
      */
 	@Override
 	public Vehiculo encontrarVehiculoPorPlaca(Vehiculo vehiculo) throws EstacionamientoException{
-		return daoVehiculo.findVehiculoByPlaca(vehiculo);
+		Vehiculo vehiculoR = daoVehiculo.findVehiculoByPlaca(vehiculo);
+		if( vehiculoR == null) {
+			throw new EstacionamientoException("El vehiculo no esta registrado", ErrorCodes.ERROR_NEG_400.getCodigo());
+		}
+		
+		return vehiculoR;
 	}
 
 	/**
@@ -132,6 +142,8 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 		Parqueo parqueo = daoParqueo.findParqueoByIdVehiculo((int)vehiculo.getIdVehiculo());
 		Bahia bahia = daoBahia.findBahiaById((long)vehiculo.getIdBahia());
 		
+		validarVahiculoSalida(vehiculo, parqueo);
+		
 		return calcularCosto(vehiculo, tipo, parqueo, bahia);
 	}
 	
@@ -140,12 +152,17 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 	 * @param vehiculo
 	 * @throws Exception
 	 */
-	private void validarVehiculo(Vehiculo vehiculo) throws EstacionamientoException{
-		Tipo tipo = daoTipo.findTipoById((long) vehiculo.getIdTipo());
-		
-		if(tipo.getNombre().equals("Moto") && (vehiculo.getCilidranje() == null) ) {
-			throw new EstacionamientoException("Cilindraje vacio", ErrorCodes.ERROR_NEG_400.getCodigo());
-		}
+	private void validarVehiculoEntrada(Vehiculo vehiculo) throws EstacionamientoException{
+				
+		if(daoVehiculo.findVehiculoByPlaca(vehiculo) == null) {
+			Tipo tipo = daoTipo.findTipoById((long) vehiculo.getIdTipo());
+			
+			if("Moto".equals(tipo.getNombre()) && (vehiculo.getCilidranje() == null) ) {
+				throw new EstacionamientoException("Cilindraje vacio", ErrorCodes.ERROR_NEG_400.getCodigo());
+			}
+		}else {
+			throw new EstacionamientoException("El vehiculo ya se encuentra registrado", ErrorCodes.ERROR_NEG_400.getCodigo());
+		}		
 	}
 	
 	/**
@@ -155,7 +172,7 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 	 * @throws Exception
 	 */
 	private void validarPlaca(String placa, Date fechaSistema) throws EstacionamientoException {		
-		if (String.valueOf(placa.charAt(0)).equals("a")) {
+		if ( "a".equals(String.valueOf(placa.charAt(0))) ) {
 			SimpleDateFormat formatoFecha = new SimpleDateFormat("EEEE");
 			String dia = formatoFecha.format(fechaSistema).toLowerCase();
 
@@ -234,6 +251,7 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
         // Actualizacion de la fechaFinal y costo del parqueo
         parqueo.setCosto(String.valueOf(valorPagar));
         parqueo.setFechaFin(fechaFinalParqueo);
+        parqueo.setEstado("Inactivo");;
         daoParqueo.updateParqueo(parqueo);
         
         // Actualizacion del estado de la bahia
@@ -294,5 +312,22 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
         }
 		
 		return valorPagar;
+	}
+
+	/**
+	 * Metodo que tiene la funcionalidad de validar si ell vehiculo esta registrado y al dia
+	 * @param vehiculo
+	 * @param parqueo
+	 * @throws EstacionamientoException
+	 */
+	private void validarVahiculoSalida(Vehiculo vehiculo, Parqueo parqueo) throws EstacionamientoException{
+		
+		if(daoVehiculo.findVehiculoByPlaca(vehiculo) != null) {
+			if(!"Activo".equals(parqueo.getEstado())) {
+				throw new EstacionamientoException("Vehiculo no genera cobro", ErrorCodes.ERROR_NEG_400.getCodigo());
+			}
+		}else {
+			throw new EstacionamientoException("El vehiculo no se encuentra registrado", ErrorCodes.ERROR_NEG_400.getCodigo());
+		}
 	}
 }

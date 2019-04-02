@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.com.ceiba.estacionamiento.dao.DaoBahia;
 import co.com.ceiba.estacionamiento.dominio.Bahia;
@@ -53,6 +53,7 @@ public class TestDaoBahia {
     }
 	
 	@Test
+	@Transactional
     public void insertarBahia() {
 		try {
             System.out.println();
@@ -131,6 +132,27 @@ public class TestDaoBahia {
             // Assert
             assertEquals(contadorBahias, daoBahia.countBahiasByIdTipoState(idTipo));
             logger.info("Fin del test contarBahiaPorIdTipoEstado");
+        } catch (Exception e) {
+            logger.error("Error JBDC", e);
+        }
+    }
+	
+	@Test
+    public void buscarBahiaPorId() {
+		try {
+            System.out.println();
+            logger.info("Inicio del test buscarBahiaPorId");
+            
+            // Arrange
+            int idBahia = 1;
+            
+            // Act
+            Bahia bahia = daoBahia.findBahiaById((long)idBahia);
+            logger.info(bahia);
+            
+            // Assert
+            assertNotNull(bahia);
+            logger.info("Fin del test buscarBahiaPorId");
         } catch (Exception e) {
             logger.error("Error JBDC", e);
         }

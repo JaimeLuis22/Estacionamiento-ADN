@@ -12,8 +12,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.com.ceiba.estacionamiento.dominio.Vehiculo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 import co.com.ceiba.estacionamiento.servicio.ServiceVehiculo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -29,6 +31,7 @@ public class TestServiceVehiculo {
     private ServiceVehiculo serviceVehiculo;
 	
 	@Test
+	@Transactional
 	@Ignore
     public void listarTodosLosVehiculos() {
         try {
@@ -53,8 +56,11 @@ public class TestServiceVehiculo {
         }
     }
 	
+	/**
+	 * Test que inserta un vehiculo
+	 */
 	@Test
-	@Ignore
+	@Transactional
     public void insertarVehiculo() {
         try {
             System.out.println();
@@ -70,7 +76,7 @@ public class TestServiceVehiculo {
             vehiculo.setIdTipo(1);
             vehiculo.setIdBahia(1);
             serviceVehiculo.insertarVehiculo(vehiculo);
-
+            
             //Recuperamos el vehiculo recien insertado por su placa 
             vehiculo = serviceVehiculo.encontrarVehiculoPorPlaca(vehiculo);
             logger.info("Vehiculo insertado (recuperado por placa): \n" + vehiculo);
@@ -85,7 +91,11 @@ public class TestServiceVehiculo {
         }
     }
 	
+	/**
+	 * Test que cuenta vehiculos, inserta, encuentra por su placa y actualiza
+	 */
 	@Test
+	@Transactional
 	@Ignore
     public void operacionA_Vehiculo() {
         try {
@@ -123,7 +133,12 @@ public class TestServiceVehiculo {
         }
     }
 	
+	/**
+	 * Test que valida la regla de la placa que inicia con A (Domingos - Lunes)
+	 * Tener en cuenta el estado de la bahia
+	 */
 	@Test
+	@Transactional
 	@Ignore
     public void reglaPlacaInicioA() {
 		System.out.println();
@@ -140,17 +155,21 @@ public class TestServiceVehiculo {
             vehiculo.setIdBahia(1);
             serviceVehiculo.insertarVehiculo(vehiculo); 
             
-        } catch (Exception e) {
-        	logger.error("Excepcion: " +e.getMessage());
+        } catch (EstacionamientoException e) {
+        	logger.info("Excepcion: " +e.getMensaje());
         	
         	// Assert
-        	assertEquals(mensajeEsperado, e.getMessage());
+        	assertEquals(mensajeEsperado, e.getMensaje());
         }
         
         logger.info("Fin del test reglaPlacaInicioA");
     }
 	
+	/**
+	 * Test que valida si el vehiculo es una moto y no cuente con el cilindraje
+	 */
 	@Test
+	@Transactional
 	@Ignore
     public void validarVehiculoMoto() {
 		System.out.println();
@@ -167,20 +186,25 @@ public class TestServiceVehiculo {
             vehiculo.setIdBahia(1);
             serviceVehiculo.insertarVehiculo(vehiculo); 
             
-        } catch (Exception e) {
-        	logger.error("Excepcion: " +e.getMessage());
+        } catch (EstacionamientoException e) {
+        	logger.info("Excepcion: " +e.getMensaje());
         	
         	// Assert
-        	assertEquals(mensajeEsperado, e.getMessage());
+        	assertEquals(mensajeEsperado, e.getMensaje());
         }
         
         logger.info("Fin del test validarVehiculoMoto");
     }
 	
+	/**
+	 * Test que valida si la bahia esta disponible para ingresar el vehiculo
+	 */
 	@Test
+	@Transactional
+	@Ignore
     public void validarBahiaDisponible() {
 		System.out.println();
-		logger.info("Inicio del test validarVehiculoMoto");
+		logger.info("Inicio del test validarBahiaDisponible");
 		
 		// Arrange
 		String mensajeEsperado = "No hay bahias disponibles";
@@ -193,14 +217,71 @@ public class TestServiceVehiculo {
             vehiculo.setIdBahia(1);
             serviceVehiculo.insertarVehiculo(vehiculo); 
             
-        } catch (Exception e) {
-        	logger.error("Excepcion: " +e.getMessage());
+        } catch (EstacionamientoException e) {
+        	logger.info("Excepcion: " +e.getMensaje());
         	
         	// Assert
-        	assertEquals(mensajeEsperado, e.getMessage());
+        	assertEquals(mensajeEsperado, e.getMensaje());
         }
         
-        logger.info("Fin del test validarVehiculoMoto");
+        logger.info("Fin del test validarBahiaDisponible");
+    }
+	
+	/**
+	 * Test que busca un vehiculo por su placa
+	 */
+	@Test
+	@Transactional
+	@Ignore
+    public void obtenerVehiculoPorPlaca() {
+		System.out.println();
+		logger.info("Inicio del test obtenerVehiculoPorPlaca");
+		
+        try {    		
+            // Act
+            Vehiculo vehiculo = new Vehiculo();
+            vehiculo.setPlaca("QWE213");
+            
+            Vehiculo vehiculoR = serviceVehiculo.encontrarVehiculoPorPlaca(vehiculo);
+            logger.info(vehiculoR);
+            
+            // Assert
+            assertNotNull(vehiculoR);
+        } catch (EstacionamientoException e) {
+
+        }
+        
+        logger.info("Fin del test obtenerVehiculoPorPlaca");
+    }
+	
+	/**
+	 * Test que da salida a un vehiculo
+	 */
+	@Test
+	@Transactional
+    public void salidaVehiculo() {
+		System.out.println();
+		logger.info("Inicio del test salidaVehiculo");
+		
+        try {    		
+            // Act
+            Vehiculo vehiculo = new Vehiculo();
+            vehiculo.setIdVehiculo((long)1);
+            vehiculo.setPlaca("QWE213");
+            vehiculo.setIdTipo(1);
+            vehiculo.setIdBahia(1);
+            logger.info(vehiculo);
+            
+            double costo = serviceVehiculo.salidaVehiculo(vehiculo);
+            logger.info(costo);
+            
+            // Assert
+            assertNotNull(costo);
+        } catch (EstacionamientoException e) {
+        	logger.error("Excepcion :" +e);
+        }
+        
+        logger.info("Fin del test salidaVehiculo");
     }
 	
 	/**

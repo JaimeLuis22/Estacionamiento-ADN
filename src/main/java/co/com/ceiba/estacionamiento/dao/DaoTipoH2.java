@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,11 +17,11 @@ import org.springframework.stereotype.Repository;
 
 import co.com.ceiba.estacionamiento.dominio.Tipo;
 import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
-import co.com.ceiba.estacionamiento.excepcion.error.ErrorCodes;
 
 @Repository
 public class DaoTipoH2 implements DaoTipo{
 	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
     
@@ -69,8 +71,7 @@ public class DaoTipoH2 implements DaoTipo{
      */
 	@Override
 	public void deleteTipo(Tipo tipo) {
-		// TODO Auto-generated method stub
-		
+		// Se implementara en otra fase
 	}
 
 	/**
@@ -89,8 +90,7 @@ public class DaoTipoH2 implements DaoTipo{
 			RowMapper<Tipo> tipoRowMapper = BeanPropertyRowMapper.newInstance(Tipo.class);
 			tipoR = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, tipoRowMapper);
 		} catch (Exception e) {
-			//throw new EstacionamientoException(e.getMessage(), ErrorCodes.ERROR_NEG_402.getCodigo());
-			tipoR = null;
+			logger.error("[DaoTipoH2][findTipoByNombre] Excepcion: "+e.getMessage(), e);
 		}
         
         return tipoR;
@@ -127,8 +127,12 @@ public class DaoTipoH2 implements DaoTipo{
 		Tipo tipo = null;
 		String sql = "SELECT * FROM TIPO WHERE id_tipo = ?";
         
-		BeanPropertyRowMapper<Tipo> tipoRowMapper = BeanPropertyRowMapper.newInstance(Tipo.class);   
-		tipo = jdbcTemplate.queryForObject(sql, tipoRowMapper, idTipo);
+		try {
+			BeanPropertyRowMapper<Tipo> tipoRowMapper = BeanPropertyRowMapper.newInstance(Tipo.class);   
+			tipo = jdbcTemplate.queryForObject(sql, tipoRowMapper, idTipo);
+		} catch (Exception e) {
+			logger.error("[DaoTipoH2][findTipoById] Excepcion: "+e.getMessage(), e);
+		}		
         
         return tipo;
 	}

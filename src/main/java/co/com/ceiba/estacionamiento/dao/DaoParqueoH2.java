@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -16,11 +18,11 @@ import org.springframework.stereotype.Repository;
 
 import co.com.ceiba.estacionamiento.dominio.Parqueo;
 import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
-import co.com.ceiba.estacionamiento.excepcion.error.ErrorCodes;
 
 @Repository
 public class DaoParqueoH2 implements DaoParqueo{
-
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
     
@@ -69,8 +71,7 @@ public class DaoParqueoH2 implements DaoParqueo{
      */
 	@Override
 	public void deleteParqueo(Parqueo parqueo) {
-		// TODO Auto-generated method stub
-		
+		// Se implementara en otra fase
 	}
 
 	/**
@@ -87,8 +88,7 @@ public class DaoParqueoH2 implements DaoParqueo{
 			BeanPropertyRowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);   
 			parqueo = jdbcTemplate.queryForObject(sql, parqueoRowMapper, idParqueo);
 		} catch (EmptyResultDataAccessException e) {
-			//throw new EstacionamientoException(e.getMessage(), ErrorCodes.ERROR_NEG_402.getCodigo());
-			parqueo = null;
+			logger.error("[DaoParqueoH2][findParqueoById] Excepcion: "+e.getMessage(), e);
 		}	
         
         return parqueo;
@@ -125,8 +125,12 @@ public class DaoParqueoH2 implements DaoParqueo{
 		Parqueo parqueo = null;
 		String sql = "SELECT * FROM PARQUEO WHERE id_vehiculo = ?";
 		
-		BeanPropertyRowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);   
-        parqueo = jdbcTemplate.queryForObject(sql, parqueoRowMapper, idVehiculo);
+		try {
+			BeanPropertyRowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);   
+	        parqueo = jdbcTemplate.queryForObject(sql, parqueoRowMapper, idVehiculo);
+		} catch (EmptyResultDataAccessException e) {
+			logger.error("[DaoParqueoH2][findParqueoByIdVehiculo] Excepcion: "+e.getMessage(), e);
+		}		
 		
         return parqueo;
 	}

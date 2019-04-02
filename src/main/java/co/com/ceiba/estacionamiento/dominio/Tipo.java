@@ -12,7 +12,7 @@ public class Tipo implements Serializable{
 	/**
 	 * Atributo que representa el id del tipo
 	 */
-	private long id_tipo;
+	private long idTipo;
 	
 	/**
 	 * Atributo que representa el nombre del tipo
@@ -30,16 +30,16 @@ public class Tipo implements Serializable{
 	 * Metodo que obtiene el id del tipo
 	 * @return
 	 */
-	public long getId_tipo() {
-		return id_tipo;
+	public long getIdTipo() {
+		return idTipo;
 	}
 
 	/**
 	 * Metodo que modifica el id del tipo
 	 * @param id_tipo
 	 */
-	public void setId_tipo(long id_tipo) {
-		this.id_tipo = id_tipo;
+	public void setId_tipo(long idTipo) {
+		this.idTipo = idTipo;
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class Tipo implements Serializable{
 	 */
 	@Override
 	public String toString() {
-		return "Tipo [id_tipo=" + id_tipo + ", nombre=" + nombre + "]";
+		return "Tipo [id_tipo=" + idTipo + ", nombre=" + nombre + "]";
 	}
 	
 }

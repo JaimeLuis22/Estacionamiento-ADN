@@ -2,6 +2,8 @@ package co.com.ceiba.estacionamiento.rest;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ import co.com.ceiba.estacionamiento.servicio.ServiceTipo;
 
 @RestController
 public class TipoRestController {
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	/**
 	 * Inyeccion del bean
@@ -44,6 +48,7 @@ public class TipoRestController {
     		}
     		contenedor.setPayload(lista);
 		} catch (Exception e) {
+			logger.error("[TipoRestController][obtenerTipos] Excepcion: "+e.getMessage(), e);
 			respuestaGenerica.setMensaje("Error Interno");
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);

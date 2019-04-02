@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -16,11 +18,11 @@ import org.springframework.stereotype.Repository;
 
 import co.com.ceiba.estacionamiento.dominio.Vehiculo;
 import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
-import co.com.ceiba.estacionamiento.excepcion.error.ErrorCodes;
 
 @Repository
 public class DaoVehiculoH2 implements DaoVehiculo{
 	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
     
@@ -69,8 +71,7 @@ public class DaoVehiculoH2 implements DaoVehiculo{
      */
 	@Override
 	public void deleteVehiculo(Vehiculo vehiculo) {
-		// TODO Auto-generated method stub
-		
+		// Se implementara en otra fase		
 	}
 
 	/**
@@ -89,8 +90,7 @@ public class DaoVehiculoH2 implements DaoVehiculo{
 	        RowMapper<Vehiculo> vehiculoRowMapper = BeanPropertyRowMapper.newInstance(Vehiculo.class);
 	        vehiculoR = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, vehiculoRowMapper);
 		} catch (EmptyResultDataAccessException e) {
-			//throw new EstacionamientoException(e.getMessage(), ErrorCodes.ERROR_NEG_402.getCodigo());
-			vehiculoR = null;
+			logger.error("[DaoVehiculoH2][findVehiculoByPlaca] Excepcion: "+e.getMessage(), e);
 		}
         
         return vehiculoR;

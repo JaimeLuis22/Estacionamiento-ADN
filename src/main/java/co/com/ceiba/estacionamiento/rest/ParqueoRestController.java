@@ -2,6 +2,8 @@ package co.com.ceiba.estacionamiento.rest;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ import co.com.ceiba.estacionamiento.servicio.ServiceParqueo;
 @RestController
 public class ParqueoRestController {
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	/**
 	 * Inyecion del bean
 	 */
@@ -45,6 +49,7 @@ public class ParqueoRestController {
     		}
     		contenedor.setPayload(lista);
 		} catch (Exception e) {
+			logger.error("[ParqueoRestController][obtenerParqueos] Excepcion: "+e.getMessage(), e);
 			respuestaGenerica.setMensaje("Error Interno");
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);
@@ -79,6 +84,7 @@ public class ParqueoRestController {
     		}
     		contenedor.setPayload(parqueo);
 		} catch (Exception e) {
+			logger.error("[ParqueoRestController][parqueoPorId] Excepcion: "+e.getMessage(), e);
 			respuestaGenerica.setMensaje("Error Interno");
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);

@@ -3,6 +3,7 @@ package co.com.ceiba.estacionamiento.servicio;
 import java.util.List;
 
 import co.com.ceiba.estacionamiento.dominio.Bahia;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 
 public interface ServiceBahia {
 
@@ -11,7 +12,7 @@ public interface ServiceBahia {
 	 * @param bahia
 	 * @throws Exception
 	 */
-	void insertarBahia(Bahia bahia) throws Exception;
+	void insertarBahia(Bahia bahia) throws EstacionamientoException;
 
 	/**
 	 * Metodo que actualiza una bahia
@@ -30,7 +31,7 @@ public interface ServiceBahia {
      * @param bahia
      * @return
      */
-    Bahia recuperarBahiaPorNumero(Bahia bahia);
+    Bahia recuperarBahiaPorNumero(Bahia bahia) throws EstacionamientoException;
 
     /**
      * Metodo que lista todas las bahias

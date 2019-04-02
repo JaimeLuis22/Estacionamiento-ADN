@@ -5,6 +5,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,6 +15,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import co.com.ceiba.estacionamiento.dominio.Parqueo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
+import co.com.ceiba.estacionamiento.excepcion.error.ErrorCodes;
 
 @Repository
 public class DaoParqueoH2 implements DaoParqueo{
@@ -76,12 +79,16 @@ public class DaoParqueoH2 implements DaoParqueo{
      * @return
      */
 	@Override
-	public Parqueo findParqueoById(long idParqueo) {
+	public Parqueo findParqueoById(long idParqueo) throws EstacionamientoException{
 		Parqueo parqueo = null;
-		String sql = "SELECT * FROM PARQUEO WHERE id_parqueo = ?";
+		try {
+			String sql = "SELECT * FROM PARQUEO WHERE id_parqueo = ?";
         
-		BeanPropertyRowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);   
-        parqueo = jdbcTemplate.queryForObject(sql, parqueoRowMapper, idParqueo);
+			BeanPropertyRowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);   
+			parqueo = jdbcTemplate.queryForObject(sql, parqueoRowMapper, idParqueo);
+		} catch (EmptyResultDataAccessException e) {
+			throw new EstacionamientoException(e.getMessage(), ErrorCodes.ERROR_NEG_402.getCodigo());
+		}	
         
         return parqueo;
 	}

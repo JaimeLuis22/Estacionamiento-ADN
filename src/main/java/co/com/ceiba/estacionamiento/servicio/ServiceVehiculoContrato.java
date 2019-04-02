@@ -18,6 +18,8 @@ import co.com.ceiba.estacionamiento.dominio.Bahia;
 import co.com.ceiba.estacionamiento.dominio.Parqueo;
 import co.com.ceiba.estacionamiento.dominio.Tipo;
 import co.com.ceiba.estacionamiento.dominio.Vehiculo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
+import co.com.ceiba.estacionamiento.excepcion.error.ErrorCodes;
 
 @Service
 public class ServiceVehiculoContrato implements ServiceVehiculo {
@@ -52,7 +54,7 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 	 * @throws Exception
 	 */
 	@Override
-	public void insertarVehiculo(Vehiculo vehiculo) throws Exception {
+	public void insertarVehiculo(Vehiculo vehiculo) throws EstacionamientoException {
 		Date fechaSistema = new Date();
 		
 		// Validaciones
@@ -96,7 +98,7 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
      * @return
      */
 	@Override
-	public Vehiculo encontrarVehiculoPorPlaca(Vehiculo vehiculo) {
+	public Vehiculo encontrarVehiculoPorPlaca(Vehiculo vehiculo) throws EstacionamientoException{
 		return daoVehiculo.findVehiculoByPlaca(vehiculo);
 	}
 
@@ -125,7 +127,7 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
      * @throws Exception
      */
 	@Override
-	public double salidaVehiculo(Vehiculo vehiculo) throws Exception{		
+	public double salidaVehiculo(Vehiculo vehiculo) throws EstacionamientoException {		
 		Tipo tipo = daoTipo.findTipoById((long)vehiculo.getIdTipo());
 		Parqueo parqueo = daoParqueo.findParqueoByIdVehiculo((int)vehiculo.getIdVehiculo());
 		Bahia bahia = daoBahia.findBahiaById((long)vehiculo.getIdBahia());
@@ -138,11 +140,11 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 	 * @param vehiculo
 	 * @throws Exception
 	 */
-	private void validarVehiculo(Vehiculo vehiculo) throws Exception{
+	private void validarVehiculo(Vehiculo vehiculo) throws EstacionamientoException{
 		Tipo tipo = daoTipo.findTipoById((long) vehiculo.getIdTipo());
 		
 		if(tipo.getNombre().equals("Moto") && (vehiculo.getCilidranje() == null) ) {
-			throw new Exception("Cilindraje vacio");
+			throw new EstacionamientoException("Cilindraje vacio", ErrorCodes.ERROR_NEG_400.getCodigo());
 		}
 	}
 	
@@ -152,16 +154,16 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 	 * @param fechaSistema
 	 * @throws Exception
 	 */
-	private void validarPlaca(String placa, Date fechaSistema) throws Exception {		
+	private void validarPlaca(String placa, Date fechaSistema) throws EstacionamientoException {		
 		if (String.valueOf(placa.charAt(0)).equals("a")) {
 			SimpleDateFormat formatoFecha = new SimpleDateFormat("EEEE");
 			String dia = formatoFecha.format(fechaSistema).toLowerCase();
 
 			switch (dia) {
 				case "sunday":
-					throw new Exception("Autorizacion negada");
+					throw new EstacionamientoException(ErrorCodes.ERROR_NEG_401.getMensaje(), ErrorCodes.ERROR_NEG_401.getCodigo());
 				case "monday":
-					throw new Exception("Autorizacion negada");
+					throw new EstacionamientoException(ErrorCodes.ERROR_NEG_401.getMensaje(), ErrorCodes.ERROR_NEG_401.getCodigo());
 			}
 		}
 	}
@@ -171,11 +173,11 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 	 * @param idTipo
 	 * @throws Exception
 	 */
-	private void validarBahia(int idTipo) throws Exception{
+	private void validarBahia(int idTipo) throws EstacionamientoException{
 		int numeroBahiasDisponibles = daoBahia.countBahiasByIdTipoState(idTipo);
 		
 		if(numeroBahiasDisponibles <= 0) {
-			throw new Exception("No hay bahias disponibles");
+			throw new EstacionamientoException("No hay bahias disponibles", ErrorCodes.ERROR_NEG_401.getCodigo());
 		}
 	}
 	
@@ -203,12 +205,13 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 	 * @return
 	 * @throws Exception
 	 */
-	private double calcularCosto(Vehiculo vehiculo, Tipo tipo, Parqueo parqueo, Bahia bahia) throws Exception {
+	private double calcularCosto(Vehiculo vehiculo, Tipo tipo, Parqueo parqueo, Bahia bahia) throws EstacionamientoException {
 		Date fechaSistema = new Date();
-		SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String formato = "yyyy-MM-dd HH:mm:ss";
+		SimpleDateFormat formatoFecha = new SimpleDateFormat(formato);
 		String fechaFinalParqueo = formatoFecha.format(fechaSistema);
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formato);
         LocalDateTime fechaInicial = LocalDateTime.parse(parqueo.getFechaInicial(), formatter);
         LocalDateTime fechaFinal = LocalDateTime.parse(fechaFinalParqueo, formatter);
         double numeroDeHoras = Duration.between(fechaInicial, fechaFinal).toHours();        
@@ -218,13 +221,7 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
         double horasObtener = decimalPart*24;
         int horasObtenidas = (int) horasObtener;
         
-        boolean esCarro = true;
-        double horaCarro = 1000;
-        double horaMoto = 500;
-        double diaCarro = 8000;
-        double diaMoto = 4000;
-        double motoAdicional = 2000;
-        double valorPagar;
+        boolean esCarro = true;        
         String cilindraje = "0";
         
         if(tipo.getNombre().equals("Moto")) {
@@ -232,7 +229,37 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
         	cilindraje = vehiculo.getCilidranje();
         }
         
-        if (esCarro) {
+        double valorPagar = valorAPagar(esCarro, dias, horasObtenidas, cilindraje);
+        
+        // Actualizacion de la fechaFinal y costo del parqueo
+        parqueo.setCosto(String.valueOf(valorPagar));
+        parqueo.setFechaFin(fechaFinalParqueo);
+        daoParqueo.updateParqueo(parqueo);
+        
+        // Actualizacion del estado de la bahia
+        bahia.setEstado("Disponible");
+        daoBahia.updateBahia(bahia);
+        
+        return valorPagar;
+	}
+	
+	/**
+	 * Metodo que tiene la funcionalidad de hacer el calculo del valor total a pagar
+	 * @param esCarro
+	 * @param dias
+	 * @param horasObtenidas
+	 * @param cilindraje
+	 * @return valorAPagar
+	 */
+	private double valorAPagar(boolean esCarro, int dias, int horasObtenidas, String cilindraje) {
+		double horaCarro = 1000;
+        double horaMoto = 500;
+        double diaCarro = 8000;
+        double diaMoto = 4000;
+        double motoAdicional = 2000;
+		double valorPagar;
+		
+		if (esCarro) {
             if (dias < 1) {
                 if (horasObtenidas < 9) {
                     valorPagar = horaCarro * horasObtenidas;
@@ -265,16 +292,7 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
                 valorPagar = valorPagar + motoAdicional;
             }
         }
-        
-        // Actualizacion de la fechaFinal y costo del parqueo
-        parqueo.setCosto(String.valueOf(valorPagar));
-        parqueo.setFechaFin(fechaFinalParqueo);
-        daoParqueo.updateParqueo(parqueo);
-        
-        // Actualizacion del estado de la bahia
-        bahia.setEstado("Disponible");
-        daoBahia.updateBahia(bahia);
-        
-        return valorPagar;
+		
+		return valorPagar;
 	}
 }

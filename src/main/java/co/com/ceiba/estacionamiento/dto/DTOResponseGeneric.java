@@ -1,7 +1,14 @@
 package co.com.ceiba.estacionamiento.dto;
 
-public class DTOResponse {
+import java.io.Serializable;
+
+public class DTOResponseGeneric implements Serializable{
 	
+	/**
+	 * Serial del bean
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Atributo que representa el mensaje de respuesta 
 	 */
@@ -15,7 +22,7 @@ public class DTOResponse {
 	/**
 	 * Constructor
 	 */
-	public DTOResponse() {
+	public DTOResponseGeneric() {
 		
 	}
 	
@@ -23,7 +30,7 @@ public class DTOResponse {
 	 * Constructor con parametro mensaje
 	 * @param mensaje
 	 */
-	public DTOResponse(String mensaje) {
+	public DTOResponseGeneric(String mensaje) {
 		this.mensaje = mensaje;
 	}
 

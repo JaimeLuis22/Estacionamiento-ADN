@@ -3,6 +3,7 @@ package co.com.ceiba.estacionamiento.dao;
 import java.util.List;
 
 import co.com.ceiba.estacionamiento.dominio.Tipo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 
 public interface DaoTipo {
 	
@@ -29,7 +30,7 @@ public interface DaoTipo {
      * @param tipo
      * @return
      */
-    Tipo findTipoByNombre(Tipo tipo);
+    Tipo findTipoByNombre(Tipo tipo) throws EstacionamientoException;
 
     /**
      * Metodo que retorna un listado de tipos de la base de datos

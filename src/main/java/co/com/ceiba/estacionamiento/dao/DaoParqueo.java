@@ -3,6 +3,7 @@ package co.com.ceiba.estacionamiento.dao;
 import java.util.List;
 
 import co.com.ceiba.estacionamiento.dominio.Parqueo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 
 public interface DaoParqueo {
 
@@ -29,7 +30,7 @@ public interface DaoParqueo {
      * @param idParqueo
      * @return
      */
-    Parqueo findParqueoById(long idParqueo);
+    Parqueo findParqueoById(long idParqueo) throws EstacionamientoException;
 
     /**
      * Metodo que retorna un listado de parqueos

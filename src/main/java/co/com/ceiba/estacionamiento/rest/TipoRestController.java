@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.com.ceiba.estacionamiento.dominio.Tipo;
+import co.com.ceiba.estacionamiento.dto.DTOResponseContainer;
+import co.com.ceiba.estacionamiento.dto.DTOResponseGeneric;
 import co.com.ceiba.estacionamiento.servicio.ServiceTipo;
 
 @RestController
@@ -26,18 +28,29 @@ public class TipoRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/tipos", method = RequestMethod.GET)
-    public ResponseEntity<List<Tipo>> obtenerTipos() {
-		List<Tipo> lista = null;
+    public ResponseEntity<DTOResponseContainer> obtenerTipos() {
+		DTOResponseContainer contenedor = new DTOResponseContainer();
+		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
+		
     	try {
-    		lista = serviceTipo.listarTipos();
+    		List<Tipo> lista = serviceTipo.listarTipos();
     		
     		if(lista.isEmpty()) {
-    			return new ResponseEntity<List<Tipo>>(HttpStatus.ACCEPTED);
+    			respuestaGenerica.setMensaje("No hay tipos");
+    			respuestaGenerica.setCodigo(HttpStatus.OK.value());
+    			contenedor.setPayload(respuestaGenerica);
+    			
+    			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
     		}
+    		contenedor.setPayload(lista);
 		} catch (Exception e) {
-			return new ResponseEntity<List<Tipo>>(HttpStatus.INTERNAL_SERVER_ERROR);
+			respuestaGenerica.setMensaje("Error Interno");
+			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			contenedor.setPayload(respuestaGenerica);
+			
+			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
 		}    	
     	
-        return new ResponseEntity<List<Tipo>>(lista, HttpStatus.OK);
+        return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
     }
 }

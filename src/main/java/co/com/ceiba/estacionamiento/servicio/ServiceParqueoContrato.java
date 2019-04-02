@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import co.com.ceiba.estacionamiento.dao.DaoParqueo;
 import co.com.ceiba.estacionamiento.dominio.Parqueo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 
 @Service
 public class ServiceParqueoContrato implements ServiceParqueo{
@@ -50,7 +51,7 @@ public class ServiceParqueoContrato implements ServiceParqueo{
      * @return
      */
 	@Override
-	public Parqueo encontrarParqueoPorId(long idParqueo) {
+	public Parqueo encontrarParqueoPorId(long idParqueo) throws EstacionamientoException{
 		return daoParqueo.findParqueoById(idParqueo);
 	}
 

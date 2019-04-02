@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.com.ceiba.estacionamiento.dominio.Vehiculo;
-import co.com.ceiba.estacionamiento.dto.DTOResponse;
+import co.com.ceiba.estacionamiento.dto.DTOResponseContainer;
+import co.com.ceiba.estacionamiento.dto.DTOResponseGeneric;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 import co.com.ceiba.estacionamiento.servicio.ServiceVehiculo;
 
 @RestController
@@ -28,19 +30,30 @@ public class VehiculoRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/vehiculos", method = RequestMethod.GET)
-    public ResponseEntity<List<Vehiculo>> obtenerVehiculos() {
-		List<Vehiculo> lista = null;
+    public ResponseEntity<DTOResponseContainer> obtenerVehiculos() {
+		DTOResponseContainer contenedor = new DTOResponseContainer();
+		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
+		
     	try {
-    		lista = serviceVehiculo.listarTodosLosVehiculos();
+    		List<Vehiculo> lista = serviceVehiculo.listarTodosLosVehiculos();
     		
     		if(lista.isEmpty()) {
-    			return new ResponseEntity<List<Vehiculo>>(HttpStatus.ACCEPTED);
+    			respuestaGenerica.setMensaje("No hay vehiculos");
+    			respuestaGenerica.setCodigo(HttpStatus.OK.value());
+    			contenedor.setPayload(respuestaGenerica);
+    			
+    			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
     		}
-		} catch (Exception e) {
-			return new ResponseEntity<List<Vehiculo>>(HttpStatus.INTERNAL_SERVER_ERROR);
+    		contenedor.setPayload(lista);
+		} catch (Exception ex) {
+			respuestaGenerica.setMensaje("Error Interno");
+			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			contenedor.setPayload(respuestaGenerica);
+			
+			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
 		}    	
     	
-        return new ResponseEntity<List<Vehiculo>>(lista, HttpStatus.OK);
+        return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
     }
      
 	/**
@@ -49,19 +62,40 @@ public class VehiculoRestController {
 	 * @return
 	 */
     @RequestMapping(value = "/registro-vehiculo", method = RequestMethod.POST)
-    public ResponseEntity<DTOResponse> registrarVehiculo(@RequestBody Vehiculo vehiculo) {
-    	DTOResponse response = new DTOResponse();
+    public ResponseEntity<DTOResponseContainer> registrarVehiculo(@RequestBody Vehiculo vehiculo) {
+    	DTOResponseContainer contenedor = new DTOResponseContainer();
+		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
     	
     	try {
 			serviceVehiculo.insertarVehiculo(vehiculo);
-			response.setMensaje("Registro Exitoso");
-			response.setCodigo(HttpStatus.OK.value());
-		} catch (Exception e) {
-			response.setMensaje(e.getMessage());
-			return new ResponseEntity<DTOResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}    	
-    	
-        return new ResponseEntity<DTOResponse>(response, HttpStatus.OK);
+			
+			respuestaGenerica.setMensaje("Registro Exitoso");
+			respuestaGenerica.setCodigo(HttpStatus.OK.value());
+			contenedor.setPayload(respuestaGenerica);
+		} catch (EstacionamientoException ex) {
+			if(ex.getCodigo() == HttpStatus.BAD_REQUEST.value()) {
+				respuestaGenerica.setMensaje(ex.getMensaje());
+    			respuestaGenerica.setCodigo(ex.getCodigo());
+    			contenedor.setPayload(respuestaGenerica);
+    			
+    			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.BAD_REQUEST);
+			}
+			
+			if(ex.getCodigo() == HttpStatus.UNAUTHORIZED.value()) {
+				respuestaGenerica.setMensaje(ex.getMensaje());
+    			respuestaGenerica.setCodigo(ex.getCodigo());
+    			contenedor.setPayload(respuestaGenerica);
+    			
+    			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.UNAUTHORIZED);
+			} else {
+				respuestaGenerica.setMensaje("Error Interno");
+				respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+				contenedor.setPayload(respuestaGenerica);
+				
+				return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
+			}		
+		}
+    	return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
     }
     
     /**
@@ -70,16 +104,23 @@ public class VehiculoRestController {
      * @return
      */
     @RequestMapping(value = "/salida-vehiculo", method = RequestMethod.POST)
-    public ResponseEntity<DTOResponse> salidaVehiculo(@RequestBody Vehiculo vehiculo) {
-    	DTOResponse response = new DTOResponse();
+    public ResponseEntity<DTOResponseContainer> salidaVehiculo(@RequestBody Vehiculo vehiculo) {
+    	DTOResponseContainer contenedor = new DTOResponseContainer();
+		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
     	
     	try {
     		double costo = serviceVehiculo.salidaVehiculo(vehiculo);
-    		response.setMensaje(String.valueOf(costo));
-			response.setCodigo(HttpStatus.OK.value());
+    		
+    		respuestaGenerica.setMensaje(String.valueOf(costo));
+    		respuestaGenerica.setCodigo(HttpStatus.OK.value());
+    		contenedor.setPayload(respuestaGenerica);
 		} catch (Exception e) {
-			// TODO: handle exception
+			respuestaGenerica.setMensaje("Error Interno");
+			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			contenedor.setPayload(respuestaGenerica);
+			
+			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-        return new ResponseEntity<DTOResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
     }
 }

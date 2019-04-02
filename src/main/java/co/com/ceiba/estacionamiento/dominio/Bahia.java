@@ -1,6 +1,13 @@
 package co.com.ceiba.estacionamiento.dominio;
 
-public class Bahia {
+import java.io.Serializable;
+
+public class Bahia implements Serializable{
+
+	/**
+	 * Serial del bean
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Atributo que representa el id

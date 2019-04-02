@@ -3,6 +3,7 @@ package co.com.ceiba.estacionamiento.servicio;
 import java.util.List;
 
 import co.com.ceiba.estacionamiento.dominio.Tipo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 
 public interface ServiceTipo {
 	
@@ -17,7 +18,7 @@ public interface ServiceTipo {
 	 * @param tipo
 	 * @return
 	 */
-    public Tipo recuperarTipoPorNombre(Tipo tipo);
+    public Tipo recuperarTipoPorNombre(Tipo tipo) throws EstacionamientoException;
 
     /**
      * Metodo que registra un tipo

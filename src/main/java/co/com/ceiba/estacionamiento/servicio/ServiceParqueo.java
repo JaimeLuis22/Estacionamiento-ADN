@@ -3,6 +3,7 @@ package co.com.ceiba.estacionamiento.servicio;
 import java.util.List;
 
 import co.com.ceiba.estacionamiento.dominio.Parqueo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 
 public interface ServiceParqueo {
 
@@ -29,7 +30,7 @@ public interface ServiceParqueo {
      * @param idParqueo
      * @return
      */
-    Parqueo encontrarParqueoPorId(long idParqueo);
+    Parqueo encontrarParqueoPorId(long idParqueo) throws EstacionamientoException;
 
     /**
      * Metodo que lista todos los parqueos registrados

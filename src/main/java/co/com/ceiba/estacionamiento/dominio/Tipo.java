@@ -1,7 +1,14 @@
 package co.com.ceiba.estacionamiento.dominio;
 
-public class Tipo {
+import java.io.Serializable;
+
+public class Tipo implements Serializable{
 	
+	/**
+	 * Serial del bean
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Atributo que representa el id del tipo
 	 */

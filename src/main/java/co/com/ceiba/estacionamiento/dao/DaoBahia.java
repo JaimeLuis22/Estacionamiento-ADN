@@ -3,6 +3,7 @@ package co.com.ceiba.estacionamiento.dao;
 import java.util.List;
 
 import co.com.ceiba.estacionamiento.dominio.Bahia;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 
 public interface DaoBahia {
 	
@@ -29,7 +30,7 @@ public interface DaoBahia {
      * @param bahia
      * @return
      */
-    Bahia findBahiaByNumero(Bahia bahia);
+    Bahia findBahiaByNumero(Bahia bahia) throws EstacionamientoException;
 
     /**
      * Metodo que retorna un listado de bahias

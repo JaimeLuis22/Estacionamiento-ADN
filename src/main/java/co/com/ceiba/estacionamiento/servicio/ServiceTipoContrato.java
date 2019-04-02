@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import co.com.ceiba.estacionamiento.dao.DaoTipo;
 import co.com.ceiba.estacionamiento.dominio.Tipo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 
 @Service
 public class ServiceTipoContrato implements ServiceTipo{
@@ -32,7 +33,7 @@ public class ServiceTipoContrato implements ServiceTipo{
 	 * @return
 	 */
 	@Override
-	public Tipo recuperarTipoPorNombre(Tipo tipo) {
+	public Tipo recuperarTipoPorNombre(Tipo tipo) throws EstacionamientoException{
 		return daoTipo.findTipoByNombre(tipo);
 	}
 

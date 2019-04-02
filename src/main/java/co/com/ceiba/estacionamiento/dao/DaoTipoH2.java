@@ -14,6 +14,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import co.com.ceiba.estacionamiento.dominio.Tipo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
+import co.com.ceiba.estacionamiento.excepcion.error.ErrorCodes;
 
 @Repository
 public class DaoTipoH2 implements DaoTipo{
@@ -77,12 +79,20 @@ public class DaoTipoH2 implements DaoTipo{
      * @return
      */
 	@Override
-	public Tipo findTipoByNombre(Tipo tipo) {
-		String sql = "SELECT * FROM TIPO WHERE nombre = :nombre";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(tipo);
-
-        RowMapper<Tipo> tipoRowMapper = BeanPropertyRowMapper.newInstance(Tipo.class);
-        return this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, tipoRowMapper);
+	public Tipo findTipoByNombre(Tipo tipo) throws EstacionamientoException{
+		Tipo tipoR = null;
+		
+		try {
+			String sql = "SELECT * FROM TIPO WHERE nombre = :nombre";
+			SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(tipo);
+			
+			RowMapper<Tipo> tipoRowMapper = BeanPropertyRowMapper.newInstance(Tipo.class);
+			tipoR = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, tipoRowMapper);
+		} catch (Exception e) {
+			throw new EstacionamientoException(e.getMessage(), ErrorCodes.ERROR_NEG_402.getCodigo());
+		}
+        
+        return tipoR;
 	}
 
 	/**

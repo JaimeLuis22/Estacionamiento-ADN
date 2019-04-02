@@ -3,6 +3,7 @@ package co.com.ceiba.estacionamiento.servicio;
 import java.util.List;
 
 import co.com.ceiba.estacionamiento.dominio.Vehiculo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 
 public interface ServiceVehiculo {
 
@@ -11,7 +12,7 @@ public interface ServiceVehiculo {
 	 * @param vehiculo
 	 * @throws Exception
 	 */
-	void insertarVehiculo(Vehiculo vehiculo) throws Exception;
+	void insertarVehiculo(Vehiculo vehiculo) throws EstacionamientoException;
 
 	/**
 	 * Metodo que actualiza un vehiculo
@@ -30,7 +31,7 @@ public interface ServiceVehiculo {
      * @param vehiculo
      * @return
      */
-    Vehiculo encontrarVehiculoPorPlaca(Vehiculo vehiculo);
+    Vehiculo encontrarVehiculoPorPlaca(Vehiculo vehiculo) throws EstacionamientoException;
 
     /**
      * Metodo que lista todos los vehiculos
@@ -50,5 +51,5 @@ public interface ServiceVehiculo {
      * @return
      * @throws Exception
      */
-    double salidaVehiculo(Vehiculo vehiculo) throws Exception;
+    double salidaVehiculo(Vehiculo vehiculo) throws EstacionamientoException;
 }

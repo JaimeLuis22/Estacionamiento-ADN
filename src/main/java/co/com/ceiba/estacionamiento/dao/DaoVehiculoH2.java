@@ -14,6 +14,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import co.com.ceiba.estacionamiento.dominio.Vehiculo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
+import co.com.ceiba.estacionamiento.excepcion.error.ErrorCodes;
 
 @Repository
 public class DaoVehiculoH2 implements DaoVehiculo{
@@ -76,12 +78,20 @@ public class DaoVehiculoH2 implements DaoVehiculo{
      * @return
      */
 	@Override
-	public Vehiculo findVehiculoByPlaca(Vehiculo vehiculo) {
-		String sql = "SELECT * FROM VEHICULO WHERE placa = :placa";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(vehiculo);
-
-        RowMapper<Vehiculo> vehiculoRowMapper = BeanPropertyRowMapper.newInstance(Vehiculo.class);
-        return this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, vehiculoRowMapper);
+	public Vehiculo findVehiculoByPlaca(Vehiculo vehiculo) throws EstacionamientoException{
+		Vehiculo vehiculoR = null;
+		
+		try {
+			String sql = "SELECT * FROM VEHICULO WHERE placa = :placa";
+	        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(vehiculo);
+	        
+	        RowMapper<Vehiculo> vehiculoRowMapper = BeanPropertyRowMapper.newInstance(Vehiculo.class);
+	        vehiculoR = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, vehiculoRowMapper);
+		} catch (Exception e) {
+			throw new EstacionamientoException(e.getMessage(), ErrorCodes.ERROR_NEG_402.getCodigo());
+		}
+        
+        return vehiculoR;
 	}
 
 	/**

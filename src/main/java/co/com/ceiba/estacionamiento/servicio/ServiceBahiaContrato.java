@@ -9,6 +9,8 @@ import co.com.ceiba.estacionamiento.dao.DaoBahia;
 import co.com.ceiba.estacionamiento.dao.DaoTipo;
 import co.com.ceiba.estacionamiento.dominio.Bahia;
 import co.com.ceiba.estacionamiento.dominio.Tipo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
+import co.com.ceiba.estacionamiento.excepcion.error.ErrorCodes;
 
 @Service
 public class ServiceBahiaContrato implements ServiceBahia{
@@ -31,16 +33,16 @@ public class ServiceBahiaContrato implements ServiceBahia{
 	 * @throws Exception
 	 */
 	@Override
-	public void insertarBahia(Bahia bahia) throws Exception{
+	public void insertarBahia(Bahia bahia) throws EstacionamientoException{
 		Tipo tipo = daoTipo.findTipoById((long)bahia.getIdTipo());
 		int numeroBahias = daoBahia.countBahiasByIdTipo(bahia.getIdTipo());
 		
 		if(tipo.getNombre().equals("Carro") && numeroBahias > 20) {
-			throw new Exception("No se puede registrar. Ha superado el limite de inserciones");
+			throw new EstacionamientoException("No se puede registrar. Ha superado el limite de inserciones", ErrorCodes.ERROR_NEG_401.getCodigo());
 		}
 		
 		if(tipo.getNombre().equals("Moto") && numeroBahias > 10) {
-			throw new Exception("No se puede registrar. Ha superado el limite de inserciones");
+			throw new EstacionamientoException("No se puede registrar. Ha superado el limite de inserciones", ErrorCodes.ERROR_NEG_401.getCodigo());
 		}
 		
 		daoBahia.insertBahia(bahia);		
@@ -70,7 +72,7 @@ public class ServiceBahiaContrato implements ServiceBahia{
      * @return
      */
 	@Override
-	public Bahia recuperarBahiaPorNumero(Bahia bahia) {
+	public Bahia recuperarBahiaPorNumero(Bahia bahia) throws EstacionamientoException{
 		return daoBahia.findBahiaByNumero(bahia);
 	}
 

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.com.ceiba.estacionamiento.dominio.Parqueo;
+import co.com.ceiba.estacionamiento.dto.DTOResponseContainer;
+import co.com.ceiba.estacionamiento.dto.DTOResponseGeneric;
 import co.com.ceiba.estacionamiento.servicio.ServiceParqueo;
 
 @RestController
@@ -27,19 +29,30 @@ public class ParqueoRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/parqueos", method = RequestMethod.GET)
-    public ResponseEntity<List<Parqueo>> obtenerParqueos() {
-		List<Parqueo> lista = null;
+    public ResponseEntity<DTOResponseContainer> obtenerParqueos() {
+		DTOResponseContainer contenedor = new DTOResponseContainer();
+		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
+		
     	try {
-    		lista = serviceParqueo.listarTodosLosParqueos();
+    		List<Parqueo> lista = serviceParqueo.listarTodosLosParqueos();
     		
     		if(lista.isEmpty()) {
-    			return new ResponseEntity<List<Parqueo>>(HttpStatus.ACCEPTED);
+    			respuestaGenerica.setMensaje("No hay parqueos");
+    			respuestaGenerica.setCodigo(HttpStatus.OK.value());
+    			contenedor.setPayload(respuestaGenerica);
+    			
+    			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
     		}
+    		contenedor.setPayload(lista);
 		} catch (Exception e) {
-			return new ResponseEntity<List<Parqueo>>(HttpStatus.INTERNAL_SERVER_ERROR);
+			respuestaGenerica.setMensaje("Error Interno");
+			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			contenedor.setPayload(respuestaGenerica);
+			
+			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
 		}    	
     	
-        return new ResponseEntity<List<Parqueo>>(lista, HttpStatus.OK);
+        return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
     }
 	
 	/**
@@ -48,15 +61,31 @@ public class ParqueoRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/parqueo-por-id/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Parqueo> parqueoPorId(@PathVariable("id") long id) {
+    public ResponseEntity<DTOResponseContainer> parqueoPorId(@PathVariable("id") long id) {
+		DTOResponseContainer contenedor = new DTOResponseContainer();
+		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
+		
 		Parqueo parqueo = new Parqueo();
 		
     	try {
     		parqueo = serviceParqueo.encontrarParqueoPorId(id);
+    		
+    		if(parqueo == null) {
+    			respuestaGenerica.setMensaje("No existe el parqueo");
+    			respuestaGenerica.setCodigo(HttpStatus.OK.value());
+    			contenedor.setPayload(respuestaGenerica);
+    			
+    			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
+    		}
+    		contenedor.setPayload(parqueo);
 		} catch (Exception e) {
-			return new ResponseEntity<Parqueo>(HttpStatus.INTERNAL_SERVER_ERROR);
+			respuestaGenerica.setMensaje("Error Interno");
+			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			contenedor.setPayload(respuestaGenerica);
+			
+			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
 		}    	
     	
-        return new ResponseEntity<Parqueo>(parqueo, HttpStatus.OK);
+        return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
     }
 }

@@ -3,6 +3,7 @@ package co.com.ceiba.estacionamiento.dao;
 import java.util.List;
 
 import co.com.ceiba.estacionamiento.dominio.Vehiculo;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 
 public interface DaoVehiculo {
 
@@ -29,7 +30,7 @@ public interface DaoVehiculo {
      * @param vehiculo
      * @return
      */
-    Vehiculo findVehiculoByPlaca(Vehiculo vehiculo);
+    Vehiculo findVehiculoByPlaca(Vehiculo vehiculo) throws EstacionamientoException;
 
     /**
      * Metodo que retorna los vehiculos registrados en la base de datos

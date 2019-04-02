@@ -5,6 +5,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,6 +15,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import co.com.ceiba.estacionamiento.dominio.Bahia;
+import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
+import co.com.ceiba.estacionamiento.excepcion.error.ErrorCodes;
 
 @Repository
 public class DaoBahiaH2 implements DaoBahia{
@@ -76,12 +79,19 @@ public class DaoBahiaH2 implements DaoBahia{
      * @return
      */
 	@Override
-	public Bahia findBahiaByNumero(Bahia bahia) {
-		String sql = "SELECT * FROM BAHIA WHERE numero = :numero";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(bahia);
+	public Bahia findBahiaByNumero(Bahia bahia) throws EstacionamientoException{
+		Bahia bahiaRes = null;
+		try {
+			String sql = "SELECT * FROM BAHIA WHERE numero = :numero";
+			SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(bahia);
 
-        RowMapper<Bahia> bahiaRowMapper = BeanPropertyRowMapper.newInstance(Bahia.class);
-        return this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, bahiaRowMapper);
+			RowMapper<Bahia> bahiaRowMapper = BeanPropertyRowMapper.newInstance(Bahia.class);
+			bahiaRes = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, bahiaRowMapper);
+		} catch (EmptyResultDataAccessException e) {
+			throw new EstacionamientoException(e.getMessage(), ErrorCodes.ERROR_NEG_402.getCodigo());
+		}
+		
+        return bahiaRes;
 	}
 
 	/**

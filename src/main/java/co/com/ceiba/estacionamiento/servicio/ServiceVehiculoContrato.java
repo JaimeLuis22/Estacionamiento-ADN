@@ -176,11 +176,11 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 			SimpleDateFormat formatoFecha = new SimpleDateFormat("EEEE");
 			String dia = formatoFecha.format(fechaSistema).toLowerCase();
 
-			switch (dia) {
-				case "sunday":
-					throw new EstacionamientoException(ErrorCodes.ERROR_NEG_401.getMensaje(), ErrorCodes.ERROR_NEG_401.getCodigo());
-				case "monday":
-					throw new EstacionamientoException(ErrorCodes.ERROR_NEG_401.getMensaje(), ErrorCodes.ERROR_NEG_401.getCodigo());
+			if ("sunday".equals(dia)) {
+				throw new EstacionamientoException(ErrorCodes.ERROR_NEG_401.getMensaje(), ErrorCodes.ERROR_NEG_401.getCodigo());
+			}
+			if("monday".equals(dia)) {
+				throw new EstacionamientoException(ErrorCodes.ERROR_NEG_401.getMensaje(), ErrorCodes.ERROR_NEG_401.getCodigo());
 			}
 		}
 	}
@@ -241,7 +241,7 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
         boolean esCarro = true;        
         String cilindraje = "0";
         
-        if(tipo.getNombre().equals("Moto")) {
+        if("Moto".equals(tipo.getNombre())) {
         	esCarro = false;
         	cilindraje = vehiculo.getCilidranje();
         }
@@ -251,7 +251,7 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
         // Actualizacion de la fechaFinal y costo del parqueo
         parqueo.setCosto(String.valueOf(valorPagar));
         parqueo.setFechaFin(fechaFinalParqueo);
-        parqueo.setEstado("Inactivo");;
+        parqueo.setEstado("Inactivo");
         daoParqueo.updateParqueo(parqueo);
         
         // Actualizacion del estado de la bahia

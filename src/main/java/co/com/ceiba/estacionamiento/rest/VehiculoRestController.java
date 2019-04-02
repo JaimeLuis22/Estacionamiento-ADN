@@ -79,6 +79,7 @@ public class VehiculoRestController {
 			respuestaGenerica.setCodigo(HttpStatus.OK.value());
 			contenedor.setPayload(respuestaGenerica);
 		} catch (EstacionamientoException ex) {
+			logger.error("[VehiculoRestController][registrarVehiculo] Excepcion: "+ex.getMessage(), ex);
 			if(ex.getCodigo() == HttpStatus.BAD_REQUEST.value()) {
 				respuestaGenerica.setMensaje(ex.getMensaje());
     			respuestaGenerica.setCodigo(ex.getCodigo());
@@ -121,6 +122,7 @@ public class VehiculoRestController {
     		respuestaGenerica.setCodigo(HttpStatus.OK.value());
     		contenedor.setPayload(respuestaGenerica);
 		} catch (EstacionamientoException ex) {
+			logger.error("[VehiculoRestController][salidaVehiculo] Excepcion: "+ex.getMessage(), ex);
 			if(ex.getCodigo() == HttpStatus.BAD_REQUEST.value()) {
 				respuestaGenerica.setMensaje(ex.getMensaje());
     			respuestaGenerica.setCodigo(ex.getCodigo());
@@ -155,6 +157,7 @@ public class VehiculoRestController {
     		
     		contenedor.setPayload(vehiculo);
 		} catch (EstacionamientoException ex) {
+			logger.error("[VehiculoRestController][obtenerVehiculoPorPlaca] Excepcion: "+ex.getMessage(), ex);
 			if(ex.getCodigo() == HttpStatus.BAD_REQUEST.value()) {
 				respuestaGenerica.setMensaje(ex.getMensaje());
     			respuestaGenerica.setCodigo(ex.getCodigo());

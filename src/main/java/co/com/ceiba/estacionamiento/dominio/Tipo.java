@@ -38,7 +38,7 @@ public class Tipo implements Serializable{
 	 * Metodo que modifica el id del tipo
 	 * @param id_tipo
 	 */
-	public void setId_tipo(long idTipo) {
+	public void setIdTipo(long idTipo) {
 		this.idTipo = idTipo;
 	}
 

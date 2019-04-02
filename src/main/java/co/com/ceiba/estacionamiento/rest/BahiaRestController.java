@@ -79,6 +79,7 @@ public class BahiaRestController {
     		respuestaGenerica.setCodigo(HttpStatus.OK.value());
     		contenedor.setPayload(respuestaGenerica);
 		} catch (EstacionamientoException ex) {
+			logger.error("[BahiaRestController][registroBahia] Excepcion: "+ex.getMessage(), ex);
 			if(ex.getCodigo() == HttpStatus.UNAUTHORIZED.value()) {
 				respuestaGenerica.setMensaje(ex.getMensaje());
 				respuestaGenerica.setCodigo(ex.getCodigo());

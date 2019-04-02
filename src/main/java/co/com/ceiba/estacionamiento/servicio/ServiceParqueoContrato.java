@@ -60,7 +60,7 @@ public class ServiceParqueoContrato implements ServiceParqueo{
      * @return
      */
 	@Override
-	public List<Parqueo> listarTodosLosParqueos() {// TODO Auto-generated method stub
+	public List<Parqueo> listarTodosLosParqueos() {
 		return daoParqueo.findAllParqueos();
 	}
 

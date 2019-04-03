@@ -36,6 +36,7 @@ public class BahiaRestController {
 	 */
 	@RequestMapping(value = "/bahias", method = RequestMethod.GET)
     public ResponseEntity<DTOResponseContainer> obtenerBahias() {
+		ResponseEntity<DTOResponseContainer> response;
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
 		
@@ -47,19 +48,21 @@ public class BahiaRestController {
     			respuestaGenerica.setCodigo(HttpStatus.ACCEPTED.value());
     			contenedor.setPayload(respuestaGenerica);
     			
-    			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.ACCEPTED);
+    			response = new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.ACCEPTED);
+    			return response;
     		}
     		contenedor.setPayload(lista);
+    		response = new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.error("[BahiaRestController][obtenerBahias] Excepcion: "+e.getMessage(), e);	
 			respuestaGenerica.setMensaje("Error Interno");
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);
 			
-			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
+			response = new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
+			return response;
 		}    	
-    	
-        return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
+        return response;
     }
 	
 	/**

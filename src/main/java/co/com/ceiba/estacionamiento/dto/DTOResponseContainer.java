@@ -12,7 +12,7 @@ public class DTOResponseContainer implements Serializable{
 	/**
 	 * Atributo del contenedor
 	 */
-	private Object payload;
+	private transient Object payload;
 	
 	/**
 	 * Constructor

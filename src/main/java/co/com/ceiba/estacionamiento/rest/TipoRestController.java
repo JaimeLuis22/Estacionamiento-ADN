@@ -19,7 +19,7 @@ import co.com.ceiba.estacionamiento.servicio.ServiceTipo;
 @RestController
 public class TipoRestController {
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOGGER = LoggerFactory.getLogger(TipoRestController.class);
 	
 	/**
 	 * Inyeccion del bean
@@ -48,7 +48,7 @@ public class TipoRestController {
     		}
     		contenedor.setPayload(lista);
 		} catch (Exception e) {
-			logger.error("[TipoRestController][obtenerTipos] Excepcion: "+e.getMessage(), e);
+			LOGGER.error("[TipoRestController][obtenerTipos] Excepcion: "+e.getMessage(), e);
 			respuestaGenerica.setMensaje("Error Interno");
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);

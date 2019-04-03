@@ -22,7 +22,7 @@ import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 @Repository
 public class DaoBahiaH2 implements DaoBahia{
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOGGER = LoggerFactory.getLogger(DaoBahiaH2.class);
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
     
@@ -72,7 +72,7 @@ public class DaoBahiaH2 implements DaoBahia{
      */
 	@Override
 	public void deleteBahia(Bahia bahia) {
-		logger.info("Se trabajara en otra fase");		
+		LOGGER.info("Se trabajara en otra fase");		
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class DaoBahiaH2 implements DaoBahia{
 			RowMapper<Bahia> bahiaRowMapper = BeanPropertyRowMapper.newInstance(Bahia.class);
 			bahiaRes = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, bahiaRowMapper);
 		} catch (EmptyResultDataAccessException e) {
-			logger.error("[DaoBahiaH2][findBahiaByNumero] Excepcion: "+e.getMessage(), e);
+			LOGGER.error("[DaoBahiaH2][findBahiaByNumero] Excepcion: "+e.getMessage(), e);
 		}
 		
         return bahiaRes;

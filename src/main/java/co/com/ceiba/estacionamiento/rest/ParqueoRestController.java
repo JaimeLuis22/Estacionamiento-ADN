@@ -20,7 +20,7 @@ import co.com.ceiba.estacionamiento.servicio.ServiceParqueo;
 @RestController
 public class ParqueoRestController {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOGGER = LoggerFactory.getLogger(ParqueoRestController.class);
 	
 	/**
 	 * Inyecion del bean
@@ -49,7 +49,7 @@ public class ParqueoRestController {
     		}
     		contenedor.setPayload(lista);
 		} catch (Exception e) {
-			logger.error("[ParqueoRestController][obtenerParqueos] Excepcion: "+e.getMessage(), e);
+			LOGGER.error("[ParqueoRestController][obtenerParqueos] Excepcion: "+e.getMessage(), e);
 			respuestaGenerica.setMensaje("Error Interno");
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);
@@ -84,7 +84,7 @@ public class ParqueoRestController {
     		}
     		contenedor.setPayload(parqueo);
 		} catch (Exception e) {
-			logger.error("[ParqueoRestController][parqueoPorId] Excepcion: "+e.getMessage(), e);
+			LOGGER.error("[ParqueoRestController][parqueoPorId] Excepcion: "+e.getMessage(), e);
 			respuestaGenerica.setMensaje("Error Interno");
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);

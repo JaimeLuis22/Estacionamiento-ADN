@@ -22,7 +22,7 @@ import co.com.ceiba.estacionamiento.servicio.ServiceBahia;
 @RestController
 public class BahiaRestController {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOGGER = LoggerFactory.getLogger(BahiaRestController.class);
 	
 	/**
 	 * Inyeccion del bean
@@ -51,7 +51,7 @@ public class BahiaRestController {
     		}
     		contenedor.setPayload(lista);
 		} catch (Exception e) {
-			logger.error("[BahiaRestController][obtenerBahias] Excepcion: "+e.getMessage(), e);	
+			LOGGER.error("[BahiaRestController][obtenerBahias] Excepcion: "+e.getMessage(), e);	
 			respuestaGenerica.setMensaje("Error Interno");
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);
@@ -79,7 +79,7 @@ public class BahiaRestController {
     		respuestaGenerica.setCodigo(HttpStatus.OK.value());
     		contenedor.setPayload(respuestaGenerica);
 		} catch (EstacionamientoException ex) {
-			logger.error("[BahiaRestController][registroBahia] Excepcion: "+ex.getMessage(), ex);
+			LOGGER.error("[BahiaRestController][registroBahia] Excepcion: "+ex.getMessage(), ex);
 			if(ex.getCodigo() == HttpStatus.UNAUTHORIZED.value()) {
 				respuestaGenerica.setMensaje(ex.getMensaje());
 				respuestaGenerica.setCodigo(ex.getCodigo());
@@ -116,7 +116,7 @@ public class BahiaRestController {
     		}
     		contenedor.setPayload(bahia);
 		} catch (Exception e) {
-			logger.error("[BahiaRestController][bahiaPorNumero] Excepcion: "+e.getMessage(), e);
+			LOGGER.error("[BahiaRestController][bahiaPorNumero] Excepcion: "+e.getMessage(), e);
 		}    	
     	
         return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);

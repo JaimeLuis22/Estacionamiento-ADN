@@ -278,40 +278,70 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 		double valorPagar;
 		
 		if (esCarro) {
-            if (dias < 1) {
-                if (horasObtenidas < 9) {
-                    valorPagar = horaCarro * horasObtenidas;
-                } else {
-                    valorPagar = diaCarro;
-                }
-            } else {
-                if (horasObtenidas < 9) {
-                    valorPagar = (horaCarro * horasObtenidas) + (diaCarro * dias);
-                } else {
-                    valorPagar = diaCarro + (diaCarro * dias);
-                }
-            }
+			valorPagar = valorTotalCarro(dias, horasObtenidas, horaCarro, diaCarro);
         } else {
-            if (dias < 1) {
-                if (horasObtenidas < 9) {
-                    valorPagar = horaMoto * horasObtenidas;
-                } else {
-                    valorPagar = diaMoto;
-                }
-            } else {
-                if (horasObtenidas < 9) {
-                    valorPagar = horaMoto * horasObtenidas + (diaMoto * dias);                    
-                } else {
-                    valorPagar = diaMoto + (diaMoto * dias);                    
-                }
-            }
-            
-            if (Integer.parseInt(cilindraje) > 500) {
-                valorPagar = valorPagar + motoAdicional;
-            }
+        	valorPagar = valorTotalMoto(dias, horasObtenidas, horaMoto, diaMoto, motoAdicional, cilindraje);
         }
 		
 		return valorPagar;
+	}
+	
+	/**
+	 * Metodo que calcular el valor a pagar por parte del carro
+	 * @param dias
+	 * @param horasObtenidas
+	 * @param horaCarro
+	 * @param diaCarro
+	 * @return
+	 */
+	private double valorTotalCarro(int dias, int horasObtenidas, double horaCarro, double diaCarro) {
+		double valorPagar;		
+		if (dias < 1) {
+            if (horasObtenidas < 9) {
+                valorPagar = horaCarro * horasObtenidas;
+            } else {
+                valorPagar = diaCarro;
+            }
+        } else {
+            if (horasObtenidas < 9) {
+                valorPagar = (horaCarro * horasObtenidas) + (diaCarro * dias);
+            } else {
+                valorPagar = diaCarro + (diaCarro * dias);
+            }
+        }
+		return valorPagar;
+	}
+	
+	/**
+	 * Metodo que calcular el valor a pagar por parte de la moto
+	 * @param dias
+	 * @param horasObtenidas
+	 * @param horaMoto
+	 * @param diaMoto
+	 * @param motoAdicional
+	 * @param cilindraje
+	 * @return
+	 */
+	private double valorTotalMoto(int dias, int horasObtenidas, double horaMoto, double diaMoto, double motoAdicional, String cilindraje) {
+		double valorPagar;
+		if (dias < 1) {
+            if (horasObtenidas < 9) {
+                valorPagar = horaMoto * horasObtenidas;
+            } else {
+                valorPagar = diaMoto;
+            }
+        } else {
+            if (horasObtenidas < 9) {
+                valorPagar = horaMoto * horasObtenidas + (diaMoto * dias);                    
+            } else {
+                valorPagar = diaMoto + (diaMoto * dias);                    
+            }
+        }
+        
+        if (Integer.parseInt(cilindraje) > 500) {
+            valorPagar = valorPagar + motoAdicional;
+        }
+        return valorPagar;
 	}
 
 	/**

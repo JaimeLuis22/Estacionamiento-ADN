@@ -22,7 +22,7 @@ import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 @Repository
 public class DaoVehiculoH2 implements DaoVehiculo{
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOGGER = LoggerFactory.getLogger(DaoVehiculoH2.class);
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
     
@@ -90,7 +90,7 @@ public class DaoVehiculoH2 implements DaoVehiculo{
 	        RowMapper<Vehiculo> vehiculoRowMapper = BeanPropertyRowMapper.newInstance(Vehiculo.class);
 	        vehiculoR = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, vehiculoRowMapper);
 		} catch (EmptyResultDataAccessException e) {
-			logger.error("[DaoVehiculoH2][findVehiculoByPlaca] Excepcion: "+e.getMessage(), e);
+			LOGGER.error("[DaoVehiculoH2][findVehiculoByPlaca] Excepcion: "+e.getMessage(), e);
 		}
         
         return vehiculoR;

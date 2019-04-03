@@ -22,7 +22,7 @@ import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 @Repository
 public class DaoParqueoH2 implements DaoParqueo{
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOGGER = LoggerFactory.getLogger(DaoParqueoH2.class);
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
     
@@ -88,7 +88,7 @@ public class DaoParqueoH2 implements DaoParqueo{
 			BeanPropertyRowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);   
 			parqueo = jdbcTemplate.queryForObject(sql, parqueoRowMapper, idParqueo);
 		} catch (EmptyResultDataAccessException e) {
-			logger.error("[DaoParqueoH2][findParqueoById] Excepcion: "+e.getMessage(), e);
+			LOGGER.error("[DaoParqueoH2][findParqueoById] Excepcion: "+e.getMessage(), e);
 		}	
         
         return parqueo;
@@ -129,7 +129,7 @@ public class DaoParqueoH2 implements DaoParqueo{
 			BeanPropertyRowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);   
 	        parqueo = jdbcTemplate.queryForObject(sql, parqueoRowMapper, idVehiculo);
 		} catch (EmptyResultDataAccessException e) {
-			logger.error("[DaoParqueoH2][findParqueoByIdVehiculo] Excepcion: "+e.getMessage(), e);
+			LOGGER.error("[DaoParqueoH2][findParqueoByIdVehiculo] Excepcion: "+e.getMessage(), e);
 		}		
 		
         return parqueo;

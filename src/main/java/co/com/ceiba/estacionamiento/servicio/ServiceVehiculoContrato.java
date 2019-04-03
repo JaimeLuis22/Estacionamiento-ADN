@@ -298,12 +298,18 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 		double valorPagar;		
 		if (dias < 1) {
             if (horasObtenidas < 9) {
+            	if(horasObtenidas < 1) {
+            		horasObtenidas = 1;
+            	}
                 valorPagar = horaCarro * horasObtenidas;
             } else {
                 valorPagar = diaCarro;
             }
         } else {
             if (horasObtenidas < 9) {
+            	if(horasObtenidas < 1) {
+            		horasObtenidas = 1;
+            	}
                 valorPagar = (horaCarro * horasObtenidas) + (diaCarro * dias);
             } else {
                 valorPagar = diaCarro + (diaCarro * dias);
@@ -326,12 +332,18 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 		double valorPagar;
 		if (dias < 1) {
             if (horasObtenidas < 9) {
+            	if(horasObtenidas < 1) {
+            		horasObtenidas = 1;
+            	}
                 valorPagar = horaMoto * horasObtenidas;
             } else {
                 valorPagar = diaMoto;
             }
         } else {
             if (horasObtenidas < 9) {
+            	if(horasObtenidas < 1) {
+            		horasObtenidas = 1;
+            	}
                 valorPagar = horaMoto * horasObtenidas + (diaMoto * dias);                    
             } else {
                 valorPagar = diaMoto + (diaMoto * dias);                    

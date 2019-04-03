@@ -35,8 +35,7 @@ public class BahiaRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/bahias", method = RequestMethod.GET)
-    public ResponseEntity<DTOResponseContainer> obtenerBahias() {
-		ResponseEntity<DTOResponseContainer> response;
+    public ResponseEntity obtenerBahias() {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
 		
@@ -48,21 +47,18 @@ public class BahiaRestController {
     			respuestaGenerica.setCodigo(HttpStatus.ACCEPTED.value());
     			contenedor.setPayload(respuestaGenerica);
     			
-    			response = new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.ACCEPTED);
-    			return response;
+    			return new ResponseEntity<>(contenedor, HttpStatus.ACCEPTED);    			
     		}
     		contenedor.setPayload(lista);
-    		response = new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.error("[BahiaRestController][obtenerBahias] Excepcion: "+e.getMessage(), e);	
 			respuestaGenerica.setMensaje("Error Interno");
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);
 			
-			response = new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
-			return response;
+			return new ResponseEntity<>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
 		}    	
-        return response;
+        return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
 	
 	/**
@@ -101,7 +97,7 @@ public class BahiaRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/bahia-por-numero/{numero}", method = RequestMethod.GET)
-    public ResponseEntity<DTOResponseContainer> bahiaPorNumero(@PathVariable("numero") int numero) {
+    public ResponseEntity bahiaPorNumero(@PathVariable("numero") int numero) {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();		
 		
@@ -115,13 +111,13 @@ public class BahiaRestController {
         		respuestaGenerica.setCodigo(HttpStatus.OK.value());
         		contenedor.setPayload(respuestaGenerica);
         		
-        		return new ResponseEntity<DTOResponseContainer>(HttpStatus.OK);
+        		return new ResponseEntity<>(HttpStatus.OK);
     		}
     		contenedor.setPayload(bahia);
 		} catch (Exception e) {
 			LOGGER.error("[BahiaRestController][bahiaPorNumero] Excepcion: "+e.getMessage(), e);
 		}    	
     	
-        return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
+        return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
 }

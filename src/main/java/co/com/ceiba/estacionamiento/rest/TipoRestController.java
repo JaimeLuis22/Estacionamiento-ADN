@@ -32,7 +32,7 @@ public class TipoRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/tipos", method = RequestMethod.GET)
-    public ResponseEntity<DTOResponseContainer> obtenerTipos() {
+    public ResponseEntity obtenerTipos() {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
 		
@@ -44,7 +44,7 @@ public class TipoRestController {
     			respuestaGenerica.setCodigo(HttpStatus.OK.value());
     			contenedor.setPayload(respuestaGenerica);
     			
-    			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
+    			return new ResponseEntity<>(contenedor, HttpStatus.OK);
     		}
     		contenedor.setPayload(lista);
 		} catch (Exception e) {
@@ -53,9 +53,9 @@ public class TipoRestController {
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);
 			
-			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
 		}    	
     	
-        return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
+        return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
 }

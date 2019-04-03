@@ -33,7 +33,7 @@ public class ParqueoRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/parqueos", method = RequestMethod.GET)
-    public ResponseEntity<DTOResponseContainer> obtenerParqueos() {
+    public ResponseEntity obtenerParqueos() {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
 		
@@ -45,7 +45,7 @@ public class ParqueoRestController {
     			respuestaGenerica.setCodigo(HttpStatus.OK.value());
     			contenedor.setPayload(respuestaGenerica);
     			
-    			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
+    			return new ResponseEntity<>(contenedor, HttpStatus.OK);
     		}
     		contenedor.setPayload(lista);
 		} catch (Exception e) {
@@ -54,10 +54,10 @@ public class ParqueoRestController {
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);
 			
-			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
 		}    	
     	
-        return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
+        return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
 	
 	/**
@@ -66,7 +66,7 @@ public class ParqueoRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/parqueo-por-id/{id}", method = RequestMethod.GET)
-    public ResponseEntity<DTOResponseContainer> parqueoPorId(@PathVariable("id") long id) {
+    public ResponseEntity parqueoPorId(@PathVariable("id") long id) {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
 		
@@ -80,7 +80,7 @@ public class ParqueoRestController {
     			respuestaGenerica.setCodigo(HttpStatus.OK.value());
     			contenedor.setPayload(respuestaGenerica);
     			
-    			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
+    			return new ResponseEntity<>(contenedor, HttpStatus.OK);
     		}
     		contenedor.setPayload(parqueo);
 		} catch (Exception e) {
@@ -89,9 +89,9 @@ public class ParqueoRestController {
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);
 			
-			return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
 		}    	
     	
-        return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
+        return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
 }

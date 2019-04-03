@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,6 +28,8 @@ import co.com.ceiba.estacionamiento.excepcion.error.ErrorCodes;
 @Service
 @Transactional(propagation=Propagation.SUPPORTS, readOnly=true) 
 public class ServiceVehiculoContrato implements ServiceVehiculo {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceVehiculoContrato.class);
 	
 	/**
 	 * Inyeccion del bean
@@ -59,23 +63,33 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	@Override
 	public void insertarVehiculo(Vehiculo vehiculo) throws EstacionamientoException {
+		LOGGER.info("[ServiceVehiculoContrato][insertarVehiculo] Inicio del metodo");
 		Date fechaSistema = new Date();
 		
 		// Validaciones
+		LOGGER.info("[ServiceVehiculoContrato][insertarVehiculo] Validar placa");
 		validarPlaca(vehiculo.getPlaca().toLowerCase(), fechaSistema);
+		LOGGER.info("[ServiceVehiculoContrato][insertarVehiculo] Validar vehiculo");
 		validarVehiculoEntrada(vehiculo);
+		LOGGER.info("[ServiceVehiculoContrato][insertarVehiculo] Validar bahia");
 		validarBahia(vehiculo.getIdTipo());
 		
 		// Insertar vehiculo
+		LOGGER.info("[ServiceVehiculoContrato][insertarVehiculo] Insertar vehiculo");
 		daoVehiculo.insertVehiculo(vehiculo);
 		
 		// Asignar Bahia
+		LOGGER.info("[ServiceVehiculoContrato][insertarVehiculo] Encontrar bahia por su id");
 		Bahia bahia = daoBahia.findBahiaById(vehiculo.getIdBahia());
 		bahia.setEstado("Ocupado");
+		LOGGER.info("[ServiceVehiculoContrato][insertarVehiculo] Bahia encontrada y modificada: " +bahia);
+		LOGGER.info("[ServiceVehiculoContrato][insertarVehiculo] Actualizar bahia");
 		daoBahia.updateBahia(bahia);
 		
-		// Asignar parqueo		
+		// Asignar parqueo
+		LOGGER.info("[ServiceVehiculoContrato][insertarVehiculo] Asignacion de parqueo");
 		daoParqueo.insertParqueo(dominioParqueoParaInsertar(fechaSistema, (int) daoVehiculo.findVehiculoByPlaca(vehiculo).getIdVehiculo()));
+		LOGGER.info("[ServiceVehiculoContrato][insertarVehiculo] Fin del metodo");
 	}
 
 	/**
@@ -137,11 +151,20 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
      * @throws Exception
      */
 	@Override
-	public double salidaVehiculo(Vehiculo vehiculo) throws EstacionamientoException {		
-		Tipo tipo = daoTipo.findTipoById((long)vehiculo.getIdTipo());
-		Parqueo parqueo = daoParqueo.findParqueoByIdVehiculo((int)vehiculo.getIdVehiculo());
-		Bahia bahia = daoBahia.findBahiaById((long)vehiculo.getIdBahia());
+	public double salidaVehiculo(Vehiculo vehiculo) throws EstacionamientoException {
+		LOGGER.info("[ServiceVehiculoContrato][salidaVehiculo] Inicio del metodo");
 		
+		LOGGER.info("[ServiceVehiculoContrato][salidaVehiculo] Encontrar tipo por su id");
+		Tipo tipo = daoTipo.findTipoById((long)vehiculo.getIdTipo());
+		LOGGER.info("[ServiceVehiculoContrato][salidaVehiculo] tipo encontrado: " +tipo);
+		LOGGER.info("[ServiceVehiculoContrato][salidaVehiculo] Encontrar parqueo por id vehiculo");
+		Parqueo parqueo = daoParqueo.findParqueoByIdVehiculo((int)vehiculo.getIdVehiculo());
+		LOGGER.info("[ServiceVehiculoContrato][salidaVehiculo] parqueo encontrado :" +parqueo);
+		LOGGER.info("[ServiceVehiculoContrato][salidaVehiculo] Encontrar bahia por su id");
+		Bahia bahia = daoBahia.findBahiaById((long)vehiculo.getIdBahia());
+		LOGGER.info("[ServiceVehiculoContrato][salidaVehiculo] bahia encontrada :" +bahia);
+		
+		LOGGER.info("[ServiceVehiculoContrato][salidaVehiculo] Validar vehiculo para su salida");
 		validarVahiculoSalida(vehiculo, parqueo);
 		
 		return calcularCosto(vehiculo, tipo, parqueo, bahia);
@@ -223,6 +246,7 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 	 * @throws Exception
 	 */
 	private double calcularCosto(Vehiculo vehiculo, Tipo tipo, Parqueo parqueo, Bahia bahia) throws EstacionamientoException {
+		LOGGER.info("[ServiceVehiculoContrato][calcularCosto] Inicio metodo");
 		Date fechaSistema = new Date();
 		String formato = "yyyy-MM-dd HH:mm:ss";
 		SimpleDateFormat formatoFecha = new SimpleDateFormat(formato);
@@ -237,6 +261,7 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
         double decimalPart = doubleResultado - dias;
         double horasObtener = decimalPart*24;
         int horasObtenidas = (int) horasObtener;
+        LOGGER.info("[ServiceVehiculoContrato][calcularCosto] dias a cobrar: " +dias+ ". Horas a cobrar: " +horasObtenidas);
         
         boolean esCarro = true;        
         String cilindraje = "0";
@@ -246,14 +271,18 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
         	cilindraje = vehiculo.getCilidranje();
         }
         
+        LOGGER.info("[ServiceVehiculoContrato][calcularCosto] El vehiculo esCarro?: " +esCarro);
         double valorPagar = valorAPagar(esCarro, dias, horasObtenidas, cilindraje);
+        LOGGER.info("[ServiceVehiculoContrato][calcularCosto] valor a pagar: " +valorPagar);
         
+        LOGGER.info("[ServiceVehiculoContrato][calcularCosto] actualizacion del parqueo");
         // Actualizacion de la fechaFinal y costo del parqueo
         parqueo.setCosto(String.valueOf(valorPagar));
         parqueo.setFechaFin(fechaFinalParqueo);
         parqueo.setEstado("Inactivo");
         daoParqueo.updateParqueo(parqueo);
         
+        LOGGER.info("[ServiceVehiculoContrato][calcularCosto] actualizacion de la bahia");
         // Actualizacion del estado de la bahia
         bahia.setEstado("Disponible");
         daoBahia.updateBahia(bahia);
@@ -363,13 +392,16 @@ public class ServiceVehiculoContrato implements ServiceVehiculo {
 	 * @throws EstacionamientoException
 	 */
 	private void validarVahiculoSalida(Vehiculo vehiculo, Parqueo parqueo) throws EstacionamientoException{
-		
+		LOGGER.info("[ServiceVehiculoContrato][validarVahiculoSalida] Inicio metodo");
 		if(daoVehiculo.findVehiculoByPlaca(vehiculo) != null) {
 			if(!"Activo".equals(parqueo.getEstado())) {
+				LOGGER.info("[ServiceVehiculoContrato][validarVahiculoSalida] Vehiculo :" +vehiculo+ " no genera cobro");
 				throw new EstacionamientoException("Vehiculo no genera cobro", ErrorCodes.ERROR_NEG_400.getCodigo());
 			}
 		}else {
+			LOGGER.info("[ServiceVehiculoContrato][validarVahiculoSalida] Vehiculo :" +vehiculo+ " no se encuentra registrado");
 			throw new EstacionamientoException("El vehiculo no se encuentra registrado", ErrorCodes.ERROR_NEG_400.getCodigo());
 		}
+		LOGGER.info("[ServiceVehiculoContrato][validarVahiculoSalida] Fin metodo");
 	}
 }

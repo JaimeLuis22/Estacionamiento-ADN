@@ -32,7 +32,7 @@ public class TipoRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/tipos", method = RequestMethod.GET)
-    public ResponseEntity obtenerTipos() {
+    public ResponseEntity<DTOResponseContainer> obtenerTipos() {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
 		

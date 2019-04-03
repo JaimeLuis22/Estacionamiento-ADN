@@ -86,10 +86,10 @@ public class TestDaoVehiculo {
 
 	@Test
 	@Transactional
-	public void buscarVehiculoPorPlaca() {
+	public void buscarVehiculoNoExistentePorPlaca() {
 		try {
             System.out.println();
-            logger.info("Inicio del test buscarVehiculoPorPlaca");
+            logger.info("Inicio del test buscarVehiculoNoExistentePorPlaca");
             
             // Act
             Vehiculo vehiculo = new Vehiculo();
@@ -101,7 +101,7 @@ public class TestDaoVehiculo {
             assertNull(daoVehiculo.findVehiculoByPlaca(vehiculo));
             logger.info(vehiculo);
             
-            logger.info("Fin del test buscarVehiculoPorPlaca");
+            logger.info("Fin del test buscarVehiculoNoExistentePorPlaca");
         } catch (Exception e) {
             logger.error("Error JBDC", e);
         }

@@ -33,7 +33,7 @@ public class ParqueoRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/parqueos", method = RequestMethod.GET)
-    public ResponseEntity obtenerParqueos() {
+    public ResponseEntity<DTOResponseContainer> obtenerParqueos() {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 				
     	try {
@@ -61,8 +61,8 @@ public class ParqueoRestController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/parqueo-por-id/{id}", method = RequestMethod.GET)
-    public ResponseEntity parqueoPorId(@PathVariable("id") long id) {
+	@RequestMapping(value = "/parqueo/{id}", method = RequestMethod.GET)
+    public ResponseEntity<DTOResponseContainer> parqueoPorId(@PathVariable("id") long id) {
 		DTOResponseContainer contenedor = new DTOResponseContainer();		
 		Parqueo parqueo = new Parqueo();
 		

@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,11 @@ public class TestServiceVehiculo {
 	@Autowired
     private ServiceVehiculo serviceVehiculo;
 	
+	/**
+	 * Test que lista todos los vehiculos
+	 */
 	@Test
 	@Transactional
-	@Ignore
     public void listarTodosLosVehiculos() {
         try {
             System.out.println();
@@ -96,7 +97,6 @@ public class TestServiceVehiculo {
 	 */
 	@Test
 	@Transactional
-	@Ignore
     public void operacionA_Vehiculo() {
         try {
             System.out.println();
@@ -139,7 +139,6 @@ public class TestServiceVehiculo {
 	 */
 	@Test
 	@Transactional
-	@Ignore
     public void reglaPlacaInicioA() {
 		System.out.println();
 		logger.info("Inicio del test reglaPlacaInicioA");
@@ -170,7 +169,6 @@ public class TestServiceVehiculo {
 	 */
 	@Test
 	@Transactional
-	@Ignore
     public void validarVehiculoMoto() {
 		System.out.println();
 		logger.info("Inicio del test validarVehiculoMoto");
@@ -201,7 +199,6 @@ public class TestServiceVehiculo {
 	 */
 	@Test
 	@Transactional
-	@Ignore
     public void validarBahiaDisponible() {
 		System.out.println();
 		logger.info("Inicio del test validarBahiaDisponible");
@@ -232,7 +229,6 @@ public class TestServiceVehiculo {
 	 */
 	@Test
 	@Transactional
-	@Ignore
     public void obtenerVehiculoPorPlaca() {
 		System.out.println();
 		logger.info("Inicio del test obtenerVehiculoPorPlaca");

@@ -36,7 +36,7 @@ public class VehiculoRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/vehiculos", method = RequestMethod.GET)
-    public ResponseEntity obtenerVehiculos() {
+    public ResponseEntity<DTOResponseContainer> obtenerVehiculos() {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 		
     	try {
@@ -64,8 +64,9 @@ public class VehiculoRestController {
 	 * @param vehiculo
 	 * @return
 	 */
-    @RequestMapping(value = "/registro-vehiculo", method = RequestMethod.POST)
-    public ResponseEntity registrarVehiculo(@RequestBody Vehiculo vehiculo) {
+    @RequestMapping(value = "/vehiculos", method = RequestMethod.POST)
+    public ResponseEntity<DTOResponseContainer> registrarVehiculo(@RequestBody Vehiculo vehiculo) {
+    	LOGGER.info("[VehiculoRestController][registrarVehiculo] Inicio del metodo");
     	DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
     	
@@ -82,6 +83,7 @@ public class VehiculoRestController {
     			respuestaGenerica.setCodigo(ex.getCodigo());
     			contenedor.setPayload(respuestaGenerica);
     			
+    			LOGGER.info("[VehiculoRestController][registrarVehiculo] Fin del metodo");
     			return new ResponseEntity<>(contenedor, HttpStatus.BAD_REQUEST);
 			}
 			
@@ -90,10 +92,13 @@ public class VehiculoRestController {
     			respuestaGenerica.setCodigo(ex.getCodigo());
     			contenedor.setPayload(respuestaGenerica);
     			
+    			LOGGER.info("[VehiculoRestController][registrarVehiculo] Fin del metodo");
     			return new ResponseEntity<>(contenedor, HttpStatus.UNAUTHORIZED);
-			}				
+			}
+			LOGGER.info("[VehiculoRestController][registrarVehiculo] Fin del metodo");
 			return new ResponseEntity<>(obtenerErrorInterno(), HttpStatus.INTERNAL_SERVER_ERROR);		
 		}
+    	LOGGER.info("[VehiculoRestController][registrarVehiculo] Fin del metodo");
     	return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
     
@@ -102,8 +107,9 @@ public class VehiculoRestController {
      * @param vehiculo
      * @return
      */
-    @RequestMapping(value = "/salida-vehiculo", method = RequestMethod.POST)
-    public ResponseEntity salidaVehiculo(@RequestBody Vehiculo vehiculo) {
+    @RequestMapping(value = "/salida-vehiculo", method = RequestMethod.PUT)
+    public ResponseEntity<DTOResponseContainer> salidaVehiculo(@RequestBody Vehiculo vehiculo) {
+    	LOGGER.info("[VehiculoRestController][salidaVehiculo] Inicio del metodo");
     	DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
     	
@@ -120,10 +126,13 @@ public class VehiculoRestController {
     			respuestaGenerica.setCodigo(ex.getCodigo());
     			contenedor.setPayload(respuestaGenerica);
     			
+    			LOGGER.info("[VehiculoRestController][salidaVehiculo] Inicio del metodo");
     			return new ResponseEntity<>(contenedor, HttpStatus.BAD_REQUEST);
-			}			
+			}
+			LOGGER.info("[VehiculoRestController][salidaVehiculo] Inicio del metodo");
 			return new ResponseEntity<>(obtenerErrorInterno(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+    	LOGGER.info("[VehiculoRestController][salidaVehiculo] Fin del metodo");
         return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
     
@@ -132,8 +141,8 @@ public class VehiculoRestController {
      * @param placa
      * @return
      */
-    @RequestMapping(value = "/vehiculo-placa/{placa}", method = RequestMethod.GET)
-    public ResponseEntity obtenerVehiculoPorPlaca(@PathVariable("placa") String placa) {
+    @RequestMapping(value = "/vehiculo/{placa}", method = RequestMethod.GET)
+    public ResponseEntity<DTOResponseContainer> obtenerVehiculoPorPlaca(@PathVariable("placa") String placa) {
     	DTOResponseContainer contenedor = new DTOResponseContainer();
     	
     	try {

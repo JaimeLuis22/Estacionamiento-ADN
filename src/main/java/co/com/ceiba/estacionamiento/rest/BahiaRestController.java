@@ -35,7 +35,7 @@ public class BahiaRestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/bahias", method = RequestMethod.GET)
-    public ResponseEntity obtenerBahias() {
+    public ResponseEntity<DTOResponseContainer> obtenerBahias() {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
 		
@@ -66,7 +66,7 @@ public class BahiaRestController {
 	 * @param bahia
 	 * @return
 	 */
-	@RequestMapping(value = "/registro-bahia", method = RequestMethod.POST)
+	@RequestMapping(value = "/bahias", method = RequestMethod.POST)
     public ResponseEntity<DTOResponseContainer> registroBahia(@RequestBody Bahia bahia) {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
@@ -96,8 +96,8 @@ public class BahiaRestController {
 	 * @param numero
 	 * @return
 	 */
-	@RequestMapping(value = "/bahia-por-numero/{numero}", method = RequestMethod.GET)
-    public ResponseEntity bahiaPorNumero(@PathVariable("numero") int numero) {
+	@RequestMapping(value = "/bahia/{numero}", method = RequestMethod.GET)
+    public ResponseEntity<DTOResponseContainer> bahiaPorNumero(@PathVariable("numero") int numero) {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();		
 		

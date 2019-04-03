@@ -23,6 +23,7 @@ import co.com.ceiba.estacionamiento.servicio.ServiceVehiculo;
 public class VehiculoRestController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(VehiculoRestController.class);
+	private static final String MENSAJE_ERROR = "Error Interno";
 	
 	/**
 	 * Inyeccion del bean
@@ -52,7 +53,7 @@ public class VehiculoRestController {
     		contenedor.setPayload(lista);
 		} catch (Exception ex) {
 			LOGGER.error("[VehiculoRestController][obtenerVehiculos] Excepcion: "+ex.getMessage(), ex);
-			respuestaGenerica.setMensaje("Error Interno");
+			respuestaGenerica.setMensaje(MENSAJE_ERROR);
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);
 			
@@ -96,7 +97,7 @@ public class VehiculoRestController {
     			return new ResponseEntity<>(contenedor, HttpStatus.UNAUTHORIZED);
 			}
 			
-			respuestaGenerica.setMensaje("Error Interno");
+			respuestaGenerica.setMensaje(MENSAJE_ERROR);
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);
 				
@@ -131,7 +132,7 @@ public class VehiculoRestController {
     			return new ResponseEntity<>(contenedor, HttpStatus.BAD_REQUEST);
 			}
 		
-			respuestaGenerica.setMensaje("Error Interno");
+			respuestaGenerica.setMensaje(MENSAJE_ERROR);
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);
 			
@@ -166,7 +167,7 @@ public class VehiculoRestController {
     			return new ResponseEntity<>(contenedor, HttpStatus.BAD_REQUEST);
 			}
 			
-			respuestaGenerica.setMensaje("Error Interno");
+			respuestaGenerica.setMensaje(MENSAJE_ERROR);
 			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			contenedor.setPayload(respuestaGenerica);
 			

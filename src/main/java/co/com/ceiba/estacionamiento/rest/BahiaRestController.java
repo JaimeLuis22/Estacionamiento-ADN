@@ -84,11 +84,11 @@ public class BahiaRestController {
 				respuestaGenerica.setCodigo(ex.getCodigo());
 				contenedor.setPayload(respuestaGenerica);
 				
-				return new ResponseEntity<DTOResponseContainer>(HttpStatus.UNAUTHORIZED);
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 			}			
 		}    	
     	
-        return new ResponseEntity<DTOResponseContainer>(contenedor, HttpStatus.OK);
+        return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
 	
 	/**

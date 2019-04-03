@@ -35,12 +35,12 @@ public class ParqueoRestController {
 	@RequestMapping(value = "/parqueos", method = RequestMethod.GET)
     public ResponseEntity obtenerParqueos() {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
-		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
-		
+				
     	try {
     		List<Parqueo> lista = serviceParqueo.listarTodosLosParqueos();
     		
     		if(lista.isEmpty()) {
+    			DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
     			respuestaGenerica.setMensaje("No hay parqueos");
     			respuestaGenerica.setCodigo(HttpStatus.OK.value());
     			contenedor.setPayload(respuestaGenerica);
@@ -49,12 +49,8 @@ public class ParqueoRestController {
     		}
     		contenedor.setPayload(lista);
 		} catch (Exception e) {
-			LOGGER.error("[ParqueoRestController][obtenerParqueos] Excepcion: "+e.getMessage(), e);
-			respuestaGenerica.setMensaje("Error Interno");
-			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			contenedor.setPayload(respuestaGenerica);
-			
-			return new ResponseEntity<>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
+			LOGGER.error("[ParqueoRestController][obtenerParqueos] Excepcion: "+e.getMessage(), e);			
+			return new ResponseEntity<>(obtenerErrorInterno(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}    	
     	
         return new ResponseEntity<>(contenedor, HttpStatus.OK);
@@ -67,15 +63,14 @@ public class ParqueoRestController {
 	 */
 	@RequestMapping(value = "/parqueo-por-id/{id}", method = RequestMethod.GET)
     public ResponseEntity parqueoPorId(@PathVariable("id") long id) {
-		DTOResponseContainer contenedor = new DTOResponseContainer();
-		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
-		
+		DTOResponseContainer contenedor = new DTOResponseContainer();		
 		Parqueo parqueo = new Parqueo();
 		
     	try {
     		parqueo = serviceParqueo.encontrarParqueoPorId(id);
     		
     		if(parqueo == null) {
+    			DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
     			respuestaGenerica.setMensaje("No existe el parqueo");
     			respuestaGenerica.setCodigo(HttpStatus.OK.value());
     			contenedor.setPayload(respuestaGenerica);
@@ -84,14 +79,20 @@ public class ParqueoRestController {
     		}
     		contenedor.setPayload(parqueo);
 		} catch (Exception e) {
-			LOGGER.error("[ParqueoRestController][parqueoPorId] Excepcion: "+e.getMessage(), e);
-			respuestaGenerica.setMensaje("Error Interno");
-			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			contenedor.setPayload(respuestaGenerica);
-			
-			return new ResponseEntity<>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
+			LOGGER.error("[ParqueoRestController][parqueoPorId] Excepcion: "+e.getMessage(), e);			
+			return new ResponseEntity<>(obtenerErrorInterno(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}    	
     	
         return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
+	
+	private DTOResponseContainer obtenerErrorInterno() {
+		DTOResponseContainer contenedor = new DTOResponseContainer();
+		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
+		
+		respuestaGenerica.setMensaje("Error Interno");
+		respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		contenedor.setPayload(respuestaGenerica);
+		return contenedor;
+	}
 }

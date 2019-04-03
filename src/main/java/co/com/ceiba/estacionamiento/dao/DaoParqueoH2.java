@@ -88,7 +88,7 @@ public class DaoParqueoH2 implements DaoParqueo{
 			BeanPropertyRowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);   
 			parqueo = jdbcTemplate.queryForObject(sql, parqueoRowMapper, idParqueo);
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("[DaoParqueoH2][findParqueoById] Excepcion: "+e.getMessage());
+			LOGGER.error("[DaoParqueoH2][findParqueoById] Excepcion: "+e.getMessage(), e);
 		}	
         
         return parqueo;
@@ -129,7 +129,7 @@ public class DaoParqueoH2 implements DaoParqueo{
 			BeanPropertyRowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);   
 	        parqueo = jdbcTemplate.queryForObject(sql, parqueoRowMapper, idVehiculo);
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("[DaoParqueoH2][findParqueoByIdVehiculo] Excepcion: "+e.getMessage());
+			LOGGER.error("[DaoParqueoH2][findParqueoByIdVehiculo] Excepcion: "+e.getMessage(), e);
 		}		
 		
         return parqueo;

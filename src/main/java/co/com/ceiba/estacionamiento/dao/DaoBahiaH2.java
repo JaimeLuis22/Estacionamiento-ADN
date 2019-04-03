@@ -89,7 +89,7 @@ public class DaoBahiaH2 implements DaoBahia{
 			RowMapper<Bahia> bahiaRowMapper = BeanPropertyRowMapper.newInstance(Bahia.class);
 			bahiaRes = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, bahiaRowMapper);
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("[DaoBahiaH2][findBahiaByNumero] Excepcion: "+e.getMessage());
+			LOGGER.error("[DaoBahiaH2][findBahiaByNumero] Excepcion: "+e.getMessage(), e);
 		}
 		
         return bahiaRes;

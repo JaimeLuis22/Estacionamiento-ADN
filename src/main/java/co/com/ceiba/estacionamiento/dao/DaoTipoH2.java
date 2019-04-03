@@ -90,7 +90,7 @@ public class DaoTipoH2 implements DaoTipo{
 			RowMapper<Tipo> tipoRowMapper = BeanPropertyRowMapper.newInstance(Tipo.class);
 			tipoR = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, tipoRowMapper);
 		} catch (Exception e) {
-			LOGGER.error("[DaoTipoH2][findTipoByNombre] Excepcion: "+e.getMessage());
+			LOGGER.error("[DaoTipoH2][findTipoByNombre] Excepcion: "+e.getMessage(), e);
 		}
         
         return tipoR;
@@ -131,7 +131,7 @@ public class DaoTipoH2 implements DaoTipo{
 			BeanPropertyRowMapper<Tipo> tipoRowMapper = BeanPropertyRowMapper.newInstance(Tipo.class);   
 			tipo = jdbcTemplate.queryForObject(sql, tipoRowMapper, idTipo);
 		} catch (Exception e) {
-			LOGGER.error("[DaoTipoH2][findTipoById] Excepcion: "+e.getMessage());
+			LOGGER.error("[DaoTipoH2][findTipoById] Excepcion: "+e.getMessage(), e);
 		}		
         
         return tipo;

@@ -62,8 +62,7 @@ public class DaoBahiaH2 implements DaoBahia{
 	@Override
 	public void updateBahia(Bahia bahia) {
 		SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(bahia);
-        this.namedParameterJdbcTemplate.update(SQL_UPDATE_BAHIA, parameterSource);
-		
+        this.namedParameterJdbcTemplate.update(SQL_UPDATE_BAHIA, parameterSource);		
 	}
 
 	/**
@@ -90,7 +89,7 @@ public class DaoBahiaH2 implements DaoBahia{
 			RowMapper<Bahia> bahiaRowMapper = BeanPropertyRowMapper.newInstance(Bahia.class);
 			bahiaRes = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, bahiaRowMapper);
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("[DaoBahiaH2][findBahiaByNumero] Excepcion: "+e.getMessage(), e);
+			LOGGER.error("[DaoBahiaH2][findBahiaByNumero] Excepcion: "+e.getMessage());
 		}
 		
         return bahiaRes;
@@ -154,6 +153,4 @@ public class DaoBahiaH2 implements DaoBahia{
 		String sql = "SELECT count(*) FROM BAHIA WHERE id_tipo = ? AND estado = ?";
 		return this.jdbcTemplate.queryForObject(sql, Integer.class, idTipo, "Disponible");
 	}
-
-	
 }

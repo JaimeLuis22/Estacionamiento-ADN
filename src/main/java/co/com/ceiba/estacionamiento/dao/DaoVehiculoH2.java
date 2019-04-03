@@ -90,7 +90,7 @@ public class DaoVehiculoH2 implements DaoVehiculo{
 	        RowMapper<Vehiculo> vehiculoRowMapper = BeanPropertyRowMapper.newInstance(Vehiculo.class);
 	        vehiculoR = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, vehiculoRowMapper);
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("[DaoVehiculoH2][findVehiculoByPlaca] Excepcion: "+e.getMessage(), e);
+			LOGGER.error("[DaoVehiculoH2][findVehiculoByPlaca] Excepcion: "+e.getMessage());
 		}
         
         return vehiculoR;
@@ -116,5 +116,4 @@ public class DaoVehiculoH2 implements DaoVehiculo{
 
         return this.jdbcTemplate.queryForObject(sql, Integer.class);
 	}
-
 }

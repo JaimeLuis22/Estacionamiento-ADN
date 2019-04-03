@@ -91,11 +91,9 @@ public class VehiculoRestController {
 				respuestaGenerica.setMensaje(ex.getMensaje());
     			respuestaGenerica.setCodigo(ex.getCodigo());
     			contenedor.setPayload(respuestaGenerica);
-    			
-    			LOGGER.info("[VehiculoRestController][registrarVehiculo] Fin del metodo");
+    
     			return new ResponseEntity<>(contenedor, HttpStatus.UNAUTHORIZED);
 			}
-			LOGGER.info("[VehiculoRestController][registrarVehiculo] Fin del metodo");
 			return new ResponseEntity<>(obtenerErrorInterno(), HttpStatus.INTERNAL_SERVER_ERROR);		
 		}
     	LOGGER.info("[VehiculoRestController][registrarVehiculo] Fin del metodo");
@@ -126,10 +124,8 @@ public class VehiculoRestController {
     			respuestaGenerica.setCodigo(ex.getCodigo());
     			contenedor.setPayload(respuestaGenerica);
     			
-    			LOGGER.info("[VehiculoRestController][salidaVehiculo] Inicio del metodo");
     			return new ResponseEntity<>(contenedor, HttpStatus.BAD_REQUEST);
 			}
-			LOGGER.info("[VehiculoRestController][salidaVehiculo] Inicio del metodo");
 			return new ResponseEntity<>(obtenerErrorInterno(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     	LOGGER.info("[VehiculoRestController][salidaVehiculo] Fin del metodo");

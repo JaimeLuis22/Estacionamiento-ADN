@@ -38,12 +38,12 @@ public class VehiculoRestController {
 	@RequestMapping(value = "/vehiculos", method = RequestMethod.GET)
     public ResponseEntity obtenerVehiculos() {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
-		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
 		
     	try {
     		List<Vehiculo> lista = serviceVehiculo.listarTodosLosVehiculos();
     		
     		if(lista.isEmpty()) {
+    			DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
     			respuestaGenerica.setMensaje("No hay vehiculos");
     			respuestaGenerica.setCodigo(HttpStatus.OK.value());
     			contenedor.setPayload(respuestaGenerica);
@@ -52,12 +52,8 @@ public class VehiculoRestController {
     		}
     		contenedor.setPayload(lista);
 		} catch (Exception ex) {
-			LOGGER.error("[VehiculoRestController][obtenerVehiculos] Excepcion: "+ex.getMessage(), ex);
-			respuestaGenerica.setMensaje(MENSAJE_ERROR);
-			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			contenedor.setPayload(respuestaGenerica);
-			
-			return new ResponseEntity<>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
+			LOGGER.error("[VehiculoRestController][obtenerVehiculos] Excepcion: "+ex.getMessage(), ex);			
+			return new ResponseEntity<>(obtenerErrorInterno(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}    	
     	
         return new ResponseEntity<>(contenedor, HttpStatus.OK);
@@ -95,13 +91,8 @@ public class VehiculoRestController {
     			contenedor.setPayload(respuestaGenerica);
     			
     			return new ResponseEntity<>(contenedor, HttpStatus.UNAUTHORIZED);
-			}
-			
-			respuestaGenerica.setMensaje(MENSAJE_ERROR);
-			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			contenedor.setPayload(respuestaGenerica);
-				
-			return new ResponseEntity<>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);		
+			}				
+			return new ResponseEntity<>(obtenerErrorInterno(), HttpStatus.INTERNAL_SERVER_ERROR);		
 		}
     	return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
@@ -130,13 +121,8 @@ public class VehiculoRestController {
     			contenedor.setPayload(respuestaGenerica);
     			
     			return new ResponseEntity<>(contenedor, HttpStatus.BAD_REQUEST);
-			}
-		
-			respuestaGenerica.setMensaje(MENSAJE_ERROR);
-			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			contenedor.setPayload(respuestaGenerica);
-			
-			return new ResponseEntity<>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
+			}			
+			return new ResponseEntity<>(obtenerErrorInterno(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
         return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
@@ -149,7 +135,6 @@ public class VehiculoRestController {
     @RequestMapping(value = "/vehiculo-placa/{placa}", method = RequestMethod.GET)
     public ResponseEntity obtenerVehiculoPorPlaca(@PathVariable("placa") String placa) {
     	DTOResponseContainer contenedor = new DTOResponseContainer();
-		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
     	
     	try {
     		Vehiculo vehiculo = new Vehiculo();
@@ -160,19 +145,29 @@ public class VehiculoRestController {
 		} catch (EstacionamientoException ex) {
 			LOGGER.error("[VehiculoRestController][obtenerVehiculoPorPlaca] Excepcion: "+ex.getMessage(), ex);
 			if(ex.getCodigo() == HttpStatus.BAD_REQUEST.value()) {
+				DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
 				respuestaGenerica.setMensaje(ex.getMensaje());
     			respuestaGenerica.setCodigo(ex.getCodigo());
     			contenedor.setPayload(respuestaGenerica);
     			
     			return new ResponseEntity<>(contenedor, HttpStatus.BAD_REQUEST);
-			}
-			
-			respuestaGenerica.setMensaje(MENSAJE_ERROR);
-			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			contenedor.setPayload(respuestaGenerica);
-			
-			return new ResponseEntity<>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
+			}			
+			return new ResponseEntity<>(obtenerErrorInterno(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
         return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
+    
+    /**
+	 * Metodo que genera el objeto de respuesta para los casos errores internos
+	 * @return
+	 */
+	private DTOResponseContainer obtenerErrorInterno() {
+		DTOResponseContainer contenedor = new DTOResponseContainer();
+		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
+		
+		respuestaGenerica.setMensaje(MENSAJE_ERROR);
+		respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		contenedor.setPayload(respuestaGenerica);
+		return contenedor;
+	}
 }

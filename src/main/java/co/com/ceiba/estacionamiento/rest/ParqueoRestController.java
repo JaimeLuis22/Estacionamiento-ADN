@@ -86,6 +86,10 @@ public class ParqueoRestController {
         return new ResponseEntity<>(contenedor, HttpStatus.OK);
     }
 	
+	/**
+	 * Metodo que genera el objeto de respuesta para los casos errores internos
+	 * @return
+	 */
 	private DTOResponseContainer obtenerErrorInterno() {
 		DTOResponseContainer contenedor = new DTOResponseContainer();
 		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();

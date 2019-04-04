@@ -2,122 +2,78 @@ package co.com.ceiba.estacionamiento.rest;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.com.ceiba.estacionamiento.commons.CodesApp;
 import co.com.ceiba.estacionamiento.dominio.Bahia;
+import co.com.ceiba.estacionamiento.dto.DTOBuilder;
 import co.com.ceiba.estacionamiento.dto.DTOResponseContainer;
-import co.com.ceiba.estacionamiento.dto.DTOResponseGeneric;
-import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 import co.com.ceiba.estacionamiento.servicio.ServiceBahia;
 
 @RestController
 public class BahiaRestController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(BahiaRestController.class);
-	
 	/**
 	 * Inyeccion del bean
 	 */
-	@Autowired
-	ServiceBahia serviceBahia;
-	
+	private final ServiceBahia serviceBahia;
+
+	BahiaRestController(ServiceBahia serviceBahia) {
+		this.serviceBahia = serviceBahia;
+	}
+
 	/**
 	 * Metodo que repesenta el listado de bahias
+	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/bahias", method = RequestMethod.GET)
-    public ResponseEntity<DTOResponseContainer> obtenerBahias() {
-		DTOResponseContainer contenedor = new DTOResponseContainer();
-		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
-		
-    	try {
-    		List<Bahia> lista = serviceBahia.listarTodasLasBahias();
-    		
-    		if(lista.isEmpty()) {
-    			respuestaGenerica.setMensaje("No hay bahias");
-    			respuestaGenerica.setCodigo(HttpStatus.ACCEPTED.value());
-    			contenedor.setPayload(respuestaGenerica);
-    			
-    			return new ResponseEntity<>(contenedor, HttpStatus.ACCEPTED);    			
-    		}
-    		contenedor.setPayload(lista);
-		} catch (Exception e) {
-			LOGGER.error("[BahiaRestController][obtenerBahias] Excepcion: "+e.getMessage(), e);	
-			respuestaGenerica.setMensaje("Error Interno");
-			respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			contenedor.setPayload(respuestaGenerica);
-			
-			return new ResponseEntity<>(contenedor, HttpStatus.INTERNAL_SERVER_ERROR);
-		}    	
-        return new ResponseEntity<>(contenedor, HttpStatus.OK);
-    }
-	
+	@GetMapping("/bahias")
+	public ResponseEntity<DTOResponseContainer> obtenerBahias() {
+		List<Bahia> lista = serviceBahia.listar();
+		if (lista.isEmpty()) {
+			return new ResponseEntity<>(
+					DTOBuilder.toDTOResponseContainer(CodesApp.INFO_NO_REGISTRO.getMensaje(), HttpStatus.OK.value()),
+					HttpStatus.OK);
+		}
+		return new ResponseEntity<>(DTOBuilder.toDTOResponseContainer(lista), HttpStatus.OK);
+	}
+
 	/**
 	 * Metodo que representa el registro de bahia
+	 * 
 	 * @param bahia
 	 * @return
 	 */
-	@RequestMapping(value = "/bahias", method = RequestMethod.POST)
-    public ResponseEntity<DTOResponseContainer> registroBahia(@RequestBody Bahia bahia) {
-		DTOResponseContainer contenedor = new DTOResponseContainer();
-		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
-		
-    	try {
-    		serviceBahia.insertarBahia(bahia);
-    		
-    		respuestaGenerica.setMensaje("Registro exitoso");
-    		respuestaGenerica.setCodigo(HttpStatus.OK.value());
-    		contenedor.setPayload(respuestaGenerica);
-		} catch (EstacionamientoException ex) {
-			LOGGER.error("[BahiaRestController][registroBahia] Excepcion: "+ex.getMessage(), ex);
-			if(ex.getCodigo() == HttpStatus.UNAUTHORIZED.value()) {
-				respuestaGenerica.setMensaje(ex.getMensaje());
-				respuestaGenerica.setCodigo(ex.getCodigo());
-				contenedor.setPayload(respuestaGenerica);
-				
-				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-			}			
-		}    	
-    	
-        return new ResponseEntity<>(contenedor, HttpStatus.OK);
-    }
-	
+	@PostMapping(path = "/bahias")
+	public ResponseEntity<DTOResponseContainer> registroBahia(@RequestBody Bahia bahia) {
+		serviceBahia.insertar(bahia);
+		return new ResponseEntity<>(
+				DTOBuilder.toDTOResponseContainer(CodesApp.INFO_REGISTRO_EXITOSO.getMensaje(), HttpStatus.OK.value()),
+				HttpStatus.OK);
+	}
+
 	/**
 	 * Metodo que representa la busqueda de una bahia por su numero
+	 * 
 	 * @param numero
 	 * @return
 	 */
-	@RequestMapping(value = "/bahia/{numero}", method = RequestMethod.GET)
-    public ResponseEntity<DTOResponseContainer> bahiaPorNumero(@PathVariable("numero") int numero) {
-		DTOResponseContainer contenedor = new DTOResponseContainer();
-		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();		
-		
-    	try {
-    		Bahia bahia = new Bahia();
-    		bahia.setNumero(numero);
-    		bahia = serviceBahia.recuperarBahiaPorNumero(bahia);
-    		
-    		if(bahia == null) {
-    			respuestaGenerica.setMensaje("No existe la bahia");
-        		respuestaGenerica.setCodigo(HttpStatus.OK.value());
-        		contenedor.setPayload(respuestaGenerica);
-        		
-        		return new ResponseEntity<>(HttpStatus.OK);
-    		}
-    		contenedor.setPayload(bahia);
-		} catch (Exception e) {
-			LOGGER.error("[BahiaRestController][bahiaPorNumero] Excepcion: "+e.getMessage(), e);
-		}    	
-    	
-        return new ResponseEntity<>(contenedor, HttpStatus.OK);
-    }
+	@GetMapping("/bahia/{numero}")
+	public ResponseEntity<DTOResponseContainer> bahiaPorNumero(@PathVariable("numero") int numero) {
+		Bahia bahia = new Bahia();
+		bahia.setNumero(numero);
+		bahia = serviceBahia.recuperarPorNumero(bahia);
+		if (bahia == null) {
+			return new ResponseEntity<>(
+					DTOBuilder.toDTOResponseContainer(CodesApp.INFO_NO_REGISTRO.getMensaje(), HttpStatus.OK.value()),
+					HttpStatus.OK);
+		}
+		return new ResponseEntity<>(DTOBuilder.toDTOResponseContainer(bahia), HttpStatus.OK);
+	}
 }

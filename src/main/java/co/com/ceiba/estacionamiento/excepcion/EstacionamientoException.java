@@ -1,6 +1,6 @@
 package co.com.ceiba.estacionamiento.excepcion;
 
-public class EstacionamientoException extends Exception {
+public class EstacionamientoException extends RuntimeException {
 
 	/**
 	 * Serial de la excepcion

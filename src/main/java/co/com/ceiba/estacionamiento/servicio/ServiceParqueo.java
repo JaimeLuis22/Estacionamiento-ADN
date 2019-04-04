@@ -2,45 +2,68 @@ package co.com.ceiba.estacionamiento.servicio;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import co.com.ceiba.estacionamiento.dao.DaoParqueo;
 import co.com.ceiba.estacionamiento.dominio.Parqueo;
 import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 
-public interface ServiceParqueo {
+@Service
+public class ServiceParqueo{
+	
+	/**
+	 * Inyeccion del bean
+	 */
+	@Autowired
+	private DaoParqueo daoParqueo;
 
 	/**
 	 * Metodo que registra un parqueo
 	 * @param parqueo
 	 */
-	void insertarParqueo(Parqueo parqueo);
+	public void insertar(Parqueo parqueo) {
+		daoParqueo.insertParqueo(parqueo);
+	}
 
 	/**
 	 * Metodo que actualiza un parqueo
 	 * @param parqueo
 	 */
-    void actualizarParqueo(Parqueo parqueo);
+	public void actualizar(Parqueo parqueo) {
+		daoParqueo.updateParqueo(parqueo);
+	}
 
-    /**
+	/**
      * Metodo que elimina un parqueo
      * @param parqueo
      */
-    void eliminarParqueo(Parqueo parqueo);
+	public void eliminar(Parqueo parqueo) {
+		daoParqueo.deleteParqueo(parqueo);
+	}
 
-    /**
+	 /**
      * Metodo que encuentra un parqueo por su id
      * @param idParqueo
      * @return
      */
-    Parqueo encontrarParqueoPorId(long idParqueo) throws EstacionamientoException;
+	public Parqueo encontrarPorId(long idParqueo) throws EstacionamientoException{
+		return daoParqueo.findParqueoById(idParqueo);
+	}
 
-    /**
+	/**
      * Metodo que lista todos los parqueos registrados
      * @return
      */
-    List<Parqueo> listarTodosLosParqueos();
+	public List<Parqueo> listar() {
+		return daoParqueo.findAllParqueos();
+	}
 
-    /**
+	/**
      * Metodo que cuenta los parqueos registrados
      */
-    int contarParqueos();
-    
+	public int contar() {
+		return daoParqueo.countParqueos();
+	}
+
 }

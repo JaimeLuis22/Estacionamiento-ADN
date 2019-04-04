@@ -27,6 +27,7 @@ pipeline {
  			steps{
  				echo "------------>Unit Tests<------------"
  				sh 'gradle --b ./build.gradle test'
+ 				sh 'gradle test jacocoTestReport'
  			}
  		}
  		stage('Integration Tests') {

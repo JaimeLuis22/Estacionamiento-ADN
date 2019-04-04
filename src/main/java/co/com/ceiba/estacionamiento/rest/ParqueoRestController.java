@@ -2,101 +2,59 @@ package co.com.ceiba.estacionamiento.rest;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.com.ceiba.estacionamiento.dominio.Parqueo;
+import co.com.ceiba.estacionamiento.dto.DTOBuilder;
 import co.com.ceiba.estacionamiento.dto.DTOResponseContainer;
-import co.com.ceiba.estacionamiento.dto.DTOResponseGeneric;
 import co.com.ceiba.estacionamiento.servicio.ServiceParqueo;
+import co.com.ceiba.estacionamiento.commons.CodesApp;
 
 @RestController
 public class ParqueoRestController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ParqueoRestController.class);
-	
 	/**
 	 * Inyecion del bean
 	 */
-	@Autowired
-	ServiceParqueo serviceParqueo;
-	
+	private final ServiceParqueo serviceParqueo;
+
+	ParqueoRestController(ServiceParqueo serviceParqueo) {
+		this.serviceParqueo = serviceParqueo;
+	}
+
 	/**
 	 * Metodo que representa el listado de parqueos
+	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/parqueos", method = RequestMethod.GET)
-    public ResponseEntity<DTOResponseContainer> obtenerParqueos() {
-		DTOResponseContainer contenedor = new DTOResponseContainer();
-				
-    	try {
-    		List<Parqueo> lista = serviceParqueo.listarTodosLosParqueos();
-    		
-    		if(lista.isEmpty()) {
-    			DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
-    			respuestaGenerica.setMensaje("No hay parqueos");
-    			respuestaGenerica.setCodigo(HttpStatus.OK.value());
-    			contenedor.setPayload(respuestaGenerica);
-    			
-    			return new ResponseEntity<>(contenedor, HttpStatus.OK);
-    		}
-    		contenedor.setPayload(lista);
-		} catch (Exception e) {
-			LOGGER.error("[ParqueoRestController][obtenerParqueos] Excepcion: "+e.getMessage(), e);			
-			return new ResponseEntity<>(obtenerErrorInterno(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}    	
-    	
-        return new ResponseEntity<>(contenedor, HttpStatus.OK);
-    }
-	
+	@GetMapping("/parqueos")
+	public ResponseEntity<DTOResponseContainer> obtenerParqueos() {
+		List<Parqueo> lista = serviceParqueo.listar();
+		if (lista.isEmpty()) {
+			return new ResponseEntity<>(DTOBuilder.toDTOResponseContainer(
+					CodesApp.INFO_NO_REGISTRO.getMensaje(), HttpStatus.OK.value()), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(DTOBuilder.toDTOResponseContainer(lista), HttpStatus.OK);
+	}
+
 	/**
 	 * Metodo que representa la busqueda de un parqueo por su id
+	 * 
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/parqueo/{id}", method = RequestMethod.GET)
-    public ResponseEntity<DTOResponseContainer> parqueoPorId(@PathVariable("id") long id) {
-		DTOResponseContainer contenedor = new DTOResponseContainer();		
-		Parqueo parqueo = new Parqueo();
-		
-    	try {
-    		parqueo = serviceParqueo.encontrarParqueoPorId(id);
-    		
-    		if(parqueo == null) {
-    			DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
-    			respuestaGenerica.setMensaje("No existe el parqueo");
-    			respuestaGenerica.setCodigo(HttpStatus.OK.value());
-    			contenedor.setPayload(respuestaGenerica);
-    			
-    			return new ResponseEntity<>(contenedor, HttpStatus.OK);
-    		}
-    		contenedor.setPayload(parqueo);
-		} catch (Exception e) {
-			LOGGER.error("[ParqueoRestController][parqueoPorId] Excepcion: "+e.getMessage(), e);			
-			return new ResponseEntity<>(obtenerErrorInterno(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}    	
-    	
-        return new ResponseEntity<>(contenedor, HttpStatus.OK);
-    }
-	
-	/**
-	 * Metodo que genera el objeto de respuesta para los casos errores internos
-	 * @return
-	 */
-	private DTOResponseContainer obtenerErrorInterno() {
-		DTOResponseContainer contenedor = new DTOResponseContainer();
-		DTOResponseGeneric respuestaGenerica = new DTOResponseGeneric();
-		
-		respuestaGenerica.setMensaje("Error Interno");
-		respuestaGenerica.setCodigo(HttpStatus.INTERNAL_SERVER_ERROR.value());
-		contenedor.setPayload(respuestaGenerica);
-		return contenedor;
+	@GetMapping("/parqueo/{id}")
+	public ResponseEntity<DTOResponseContainer> parqueoPorId(@PathVariable("id") long id) {	
+		Parqueo parqueo = serviceParqueo.encontrarPorId(id);
+		if (parqueo == null) {
+			return new ResponseEntity<>(
+					DTOBuilder.toDTOResponseContainer(CodesApp.INFO_NO_REGISTRO.getMensaje(), HttpStatus.OK.value()),
+					HttpStatus.OK);
+		}
+		return new ResponseEntity<>(DTOBuilder.toDTOResponseContainer(parqueo), HttpStatus.OK);
 	}
 }

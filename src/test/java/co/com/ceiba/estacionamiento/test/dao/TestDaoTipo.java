@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,89 +15,64 @@ import co.com.ceiba.estacionamiento.dao.DaoTipo;
 import co.com.ceiba.estacionamiento.dominio.Tipo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:applicationContext.xml"})
+@ContextConfiguration(locations = { "classpath:applicationContext.xml" })
 public class TestDaoTipo {
-	
-	private final Logger logger = LogManager.getRootLogger();
-	
+
 	/**
 	 * Inyeccion del bean
 	 */
 	@Autowired
-    private DaoTipo daoTipo;
+	private DaoTipo daoTipo;
 
 	@Test
-    public void mostrarTipos() {
-        try {
-            System.out.println();
-            logger.info("Inicio del test mostrarTipos");
-            
-            // Act
-            List<Tipo> tipos = daoTipo.findAllTipos();
-            
-            int contadorTipos = 0;
-            for (Tipo tipo : tipos) {
-                logger.info("Tipo: " + tipo);
-                contadorTipos++;
-            }
+	public void mostrarTipos() {
+		System.out.println();
 
-            // Assert
-            assertEquals(contadorTipos, daoTipo.countTipos());
+		// Act
+		List<Tipo> tipos = daoTipo.findAllTipos();
 
-            logger.info("Fin del test mostrarTipos");
-        } catch (Exception e) {
-            logger.error("Error JBDC", e);
-        }
-    }
-	
+		int contadorTipos = 0;
+		for (int i = 0; i < tipos.size(); i++) {
+			contadorTipos++;
+		}
+
+		// Assert
+		assertEquals(contadorTipos, daoTipo.countTipos());
+	}
+
 	@Test
 	@Transactional
-    public void insertarTipo() {
-		try {
-            System.out.println();
-            logger.info("Inicio del test insertarTipo");
-            
-            // Arrange
-            // El script de datos tiene 1 registro
-            assertEquals(2, daoTipo.countTipos());
-            
-            // Act
-            Tipo tipo = new Tipo();
-            tipo.setNombre("Bicicleta");
-            daoTipo.insertTipo(tipo);
+	public void insertarTipo() {
+		System.out.println();
 
-            //Recuperamos el tipo recien insertado por su nombre 
-            tipo = daoTipo.findTipoByNombre(tipo);
-            logger.info("Tipo insertado (recuperado por nombre): \n" + tipo);
-            
-            // Assert
-            // Deberia existir 2 tipos
-            assertEquals(3, daoTipo.countTipos());
-            logger.info("Fin del test insertarTipo");
-        } catch (Exception e) {
-            logger.error("Error JBDC", e);
-        }
-    }
-	
+		// Arrange
+		// El script de datos tiene 1 registro
+		assertEquals(2, daoTipo.countTipos());
+
+		// Act
+		Tipo tipo = new Tipo();
+		tipo.setNombre("Bicicleta");
+		daoTipo.insertTipo(tipo);
+
+		// Recuperamos el tipo recien insertado por su nombre
+		tipo = daoTipo.findTipoByNombre(tipo);
+
+		// Assert
+		// Deberia existir 2 tipos
+		assertEquals(3, daoTipo.countTipos());
+	}
+
 	@Test
-    public void buscarTipoPorId() {
-		try {
-            System.out.println();
-            logger.info("Inicio del test buscarTipoPorId");
-            
-            // Act
-            int idTipo = 1;
-            String nombre = "Carro";
-            
-            logger.info(daoTipo.findTipoById((long)idTipo).getNombre());
-            
-            // Assert
-            // Deberia existir 2 tipos
-            assertEquals(nombre, daoTipo.findTipoById(idTipo).getNombre());
-            logger.info("Fin del test buscarTipoPorId");
-        } catch (Exception e) {
-            logger.error("Error JBDC", e);
-        }
-    }
+	public void buscarTipoPorId() {
+		System.out.println();
+
+		// Act
+		int idTipo = 1;
+		String nombre = "Carro";
+
+		// Assert
+		// Deberia existir 2 tipos
+		assertEquals(nombre, daoTipo.findTipoById(idTipo).getNombre());
+	}
 
 }

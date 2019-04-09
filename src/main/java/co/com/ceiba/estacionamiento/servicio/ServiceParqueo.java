@@ -65,5 +65,11 @@ public class ServiceParqueo{
 	public int contar() {
 		return daoParqueo.countParqueos();
 	}
-
+	
+	/**
+     * Metodo que obtiene un parqueo por el id del vehiculo
+     */
+	public Parqueo encontrarParqueoPorIdVehiculo(int idVehiculo) {
+		return daoParqueo.findParqueoByIdVehiculo(idVehiculo);
+	}
 }

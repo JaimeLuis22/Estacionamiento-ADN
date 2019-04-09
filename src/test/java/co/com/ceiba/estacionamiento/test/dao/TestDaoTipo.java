@@ -1,5 +1,6 @@
 package co.com.ceiba.estacionamiento.test.dao;
 
+import co.com.ceiba.estacionamiento.builder.TestBuilder;
 import static org.junit.Assert.*;
 
 import java.util.List;
@@ -46,19 +47,16 @@ public class TestDaoTipo {
 		System.out.println();
 
 		// Arrange
-		// El script de datos tiene 1 registro
 		assertEquals(2, daoTipo.countTipos());
 
 		// Act
-		Tipo tipo = new Tipo();
-		tipo.setNombre("Bicicleta");
+		Tipo tipo = TestBuilder.toTipo();
 		daoTipo.insertTipo(tipo);
 
 		// Recuperamos el tipo recien insertado por su nombre
 		tipo = daoTipo.findTipoByNombre(tipo);
 
 		// Assert
-		// Deberia existir 2 tipos
 		assertEquals(3, daoTipo.countTipos());
 	}
 
@@ -71,7 +69,6 @@ public class TestDaoTipo {
 		String nombre = "Carro";
 
 		// Assert
-		// Deberia existir 2 tipos
 		assertEquals(nombre, daoTipo.findTipoById(idTipo).getNombre());
 	}
 

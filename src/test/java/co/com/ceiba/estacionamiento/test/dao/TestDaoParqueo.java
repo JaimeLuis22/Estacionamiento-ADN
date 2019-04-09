@@ -1,5 +1,6 @@
 package co.com.ceiba.estacionamiento.test.dao;
 
+import co.com.ceiba.estacionamiento.builder.TestBuilder;
 import static org.junit.Assert.*;
 
 import java.util.List;
@@ -40,21 +41,16 @@ public class TestDaoParqueo {
 	public void insertarParqueo() {
 		System.out.println();
 		// Assert
-		// El script de datos tiene 1 registro
 		assertEquals(1, daoParqueo.countParqueos());
 
 		// Act
-		Parqueo parqueo = new Parqueo();
-		parqueo.setFechaInicial("12-12-12");
-		parqueo.setEstado("Disponible");
-		parqueo.setIdVehiculo(1);
+		Parqueo parqueo = TestBuilder.toParqueo();
 		daoParqueo.insertParqueo(parqueo);
 
 		// Recuperamos el parqueo recien insertado por su id
 		parqueo = daoParqueo.findParqueoById(2);
 
 		// Assert
-		// Deberian existir 2 parqueos
 		assertEquals(2, daoParqueo.countParqueos());
 	}
 

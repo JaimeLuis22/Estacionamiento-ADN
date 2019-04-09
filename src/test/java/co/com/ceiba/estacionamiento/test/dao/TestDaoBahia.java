@@ -1,5 +1,6 @@
 package co.com.ceiba.estacionamiento.test.dao;
 
+import co.com.ceiba.estacionamiento.builder.TestBuilder;
 import static org.junit.Assert.*;
 
 import java.util.List;
@@ -15,106 +16,91 @@ import co.com.ceiba.estacionamiento.dao.DaoBahia;
 import co.com.ceiba.estacionamiento.dominio.Bahia;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:applicationContext.xml" })
+@ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class TestDaoBahia {
 
-	/**
-	 * Inyeccion del bean
-	 */
-	@Autowired
-	private DaoBahia daoBahia;
+    /**
+     * Inyeccion del bean
+     */
+    @Autowired
+    private DaoBahia daoBahia;
 
-	@Test
-	public void mostrarBahias() {
-		System.out.println();
+    @Test
+    public void mostrarBahias() {
+        // Act
+        List<Bahia> bahias = daoBahia.findAllBahias();
 
-		// Act
-		List<Bahia> bahias = daoBahia.findAllBahias();
+        int contadorBahias = 0;
+        for (int i = 0; i < bahias.size(); i++) {
+            contadorBahias++;
+        }
 
-		int contadorBahias = 0;
-		for (int i = 0; i < bahias.size(); i++) {
-			contadorBahias++;
-		}
+        // Assert
+        assertEquals(contadorBahias, daoBahia.countBahias());
+    }
 
-		// Assert
-		assertEquals(contadorBahias, daoBahia.countBahias());
-	}
+    @Test
+    @Transactional
+    public void insertarBahia() {
+        // Arrange
+        assertEquals(1, daoBahia.countBahias());
 
-	@Test
-	@Transactional
-	public void insertarBahia() {
-		System.out.println();
+        // Act
+        Bahia bahia = TestBuilder.toBahia();
+        daoBahia.insertBahia(bahia);
 
-		// Arrange
-		// El script de datos tiene 1 registro
-		assertEquals(1, daoBahia.countBahias());
+        // Recuperamos la bahia recien insertada por su numero
+        bahia = daoBahia.findBahiaByNumero(bahia);
 
-		// Act
-		Bahia bahia = new Bahia();
-		bahia.setNumero(2);
-		bahia.setEstado("Disponible");
-		bahia.setIdTipo(1);
-		daoBahia.insertBahia(bahia);
+        // Assert
+        assertEquals(2, daoBahia.countBahias());
+    }
 
-		// Recuperamos la bahia recien insertada por su numero
-		bahia = daoBahia.findBahiaByNumero(bahia);
+    @Test
+    public void contarBahiaPorIdTipo() {
+        // Arrange
+        int idTipo = 1;
 
-		// Assert
-		// Deberia existir 2 bahias
-		assertEquals(2, daoBahia.countBahias());
-	}
+        // Act
+        List<Bahia> bahias = daoBahia.findAllBahias();
+        int contadorBahias = 0;
+        for (Bahia bahia : bahias) {
+            if (bahia.getIdTipo() == idTipo) {
+                contadorBahias++;
+            }
+        }
 
-	@Test
-	public void contarBahiaPorIdTipo() {
-		System.out.println();
+        // Assert
+        assertEquals(contadorBahias, daoBahia.countBahiasByIdTipo(idTipo));
+    }
 
-		// Arrange
-		int idTipo = 1;
+    @Test
+    public void contarBahiaPorIdTipoEstado() {
+        // Arrange
+        int idTipo = 1;
 
-		// Act
-		List<Bahia> bahias = daoBahia.findAllBahias();
-		int contadorBahias = 0;
-		for (Bahia bahia : bahias) {
-			if (bahia.getIdTipo() == idTipo) {
-				contadorBahias++;
-			}
-		}
+        // Act
+        List<Bahia> bahias = daoBahia.findAllBahias();
+        int contadorBahias = 0;
+        for (Bahia bahia : bahias) {
+            if (bahia.getIdTipo() == idTipo && bahia.getEstado().equals("Disponible")) {
+                contadorBahias++;
+            }
+        }
 
-		// Assert
-		assertEquals(contadorBahias, daoBahia.countBahiasByIdTipo(idTipo));
-	}
+        // Assert
+        assertEquals(contadorBahias, daoBahia.countBahiasByIdTipoState(idTipo));
+    }
 
-	@Test
-	public void contarBahiaPorIdTipoEstado() {
-		System.out.println();
+    @Test
+    public void buscarBahiaPorId() {
+        // Arrange
+        int idBahia = 1;
 
-		// Arrange
-		int idTipo = 1;
+        // Act
+        Bahia bahia = daoBahia.findBahiaById((long) idBahia);
 
-		// Act
-		List<Bahia> bahias = daoBahia.findAllBahias();
-		int contadorBahias = 0;
-		for (Bahia bahia : bahias) {
-			if (bahia.getIdTipo() == idTipo && bahia.getEstado().equals("Disponible")) {
-				contadorBahias++;
-			}
-		}
-
-		// Assert
-		assertEquals(contadorBahias, daoBahia.countBahiasByIdTipoState(idTipo));
-	}
-
-	@Test
-	public void buscarBahiaPorId() {
-		System.out.println();
-
-		// Arrange
-		int idBahia = 1;
-
-		// Act
-		Bahia bahia = daoBahia.findBahiaById((long) idBahia);
-
-		// Assert
-		assertNotNull(bahia);
-	}
+        // Assert
+        assertNotNull(bahia);
+    }
 }

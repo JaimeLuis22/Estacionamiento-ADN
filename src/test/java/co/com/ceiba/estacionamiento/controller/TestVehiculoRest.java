@@ -1,5 +1,6 @@
 package co.com.ceiba.estacionamiento.controller;
 
+import co.com.ceiba.estacionamiento.builder.TestBuilder;
 import co.com.ceiba.estacionamiento.dominio.Vehiculo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -11,6 +12,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,24 +44,21 @@ public class TestVehiculoRest {
     
     @Test
     public void vehiculoPorPlaca() throws Exception {
-        mockMvc.perform(get("/vehiculo/QWE213"))
+        mockMvc.perform(get("/vehiculos/QWE213"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{'payload': {'idVehiculo': 1,'placa': 'QWE213','cilidranje': null,'idTipo': 1,'idBahia': 1}}"));
     }
     
     @Test
-    public void ingresar() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        
-        Vehiculo vehiculo = new Vehiculo();
-        vehiculo.setPlaca("FEQ578");
-        vehiculo.setIdTipo(1);
-        vehiculo.setIdBahia(1);
-        
-        String vehiculoString = mapper.writeValueAsString(vehiculo);
-        
-        mockMvc.perform(post("/vehiculos").contentType(MediaType.APPLICATION_JSON).content(vehiculoString))
+    public void ingresar() throws Exception {        
+        mockMvc.perform(post("/vehiculos").contentType(MediaType.APPLICATION_JSON).content(TestBuilder.objectToJson(TestBuilder.toVehiculo())))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{'payload': {'mensaje': 'Registro exitoso','codigo': 200}}"));
+    }
+    
+    @Test
+    public void salida() throws Exception {        
+        mockMvc.perform(put("/vehiculos/salida").contentType(MediaType.APPLICATION_JSON).content(TestBuilder.objectToJson(TestBuilder.toVehiculoExistente())))
+                .andExpect(status().isOk());
     }
 }

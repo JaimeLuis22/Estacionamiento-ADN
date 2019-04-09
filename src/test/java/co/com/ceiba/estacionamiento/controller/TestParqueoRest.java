@@ -46,7 +46,14 @@ public class TestParqueoRest {
     
     @Test
     public void parqueoPorId() throws Exception {
-        mockMvc.perform(get("/parqueo/1"))
+        mockMvc.perform(get("/parqueos/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{'payload': {'idParqueo': 1,'fechaInicial': '2019-04-01 19:40:37','fechaFin': null,'costo': null,'estado': 'Activo','idVehiculo': 1}}"));
+    }
+    
+    @Test
+    public void parqueoPorIdVehiculo() throws Exception {
+        mockMvc.perform(get("/parqueos/vehiculo/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{'payload': {'idParqueo': 1,'fechaInicial': '2019-04-01 19:40:37','fechaFin': null,'costo': null,'estado': 'Activo','idVehiculo': 1}}"));
     }

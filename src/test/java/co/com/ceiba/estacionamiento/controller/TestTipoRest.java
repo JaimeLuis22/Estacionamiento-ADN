@@ -5,20 +5,19 @@
  */
 package co.com.ceiba.estacionamiento.controller;
 
-import co.com.ceiba.estacionamiento.dominio.Bahia;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import co.com.ceiba.estacionamiento.builder.TestBuilder;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -28,8 +27,8 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TestBahiaRest {
-    
+public class TestTipoRest {
+
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -41,31 +40,15 @@ public class TestBahiaRest {
     }
     
     @Test
-    public void bahias() throws Exception {
-        mockMvc.perform(get("/bahias"))
+    public void tipos() throws Exception {
+        mockMvc.perform(get("/tipos"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{'payload': [{'idBahia': 1,'numero': 1,'estado': 'Disponible','idTipo': 1}]}"));
+                .andExpect(content().json("{'payload': [{'idTipo': 1,'nombre': 'Carro'},{'idTipo': 2,'nombre': 'Moto'}]}"));
     }
     
     @Test
-    public void bahiaPorNumero() throws Exception {
-        mockMvc.perform(get("/bahias/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{'payload': {'idBahia': 1,'numero': 1,'estado': 'Disponible','idTipo': 1}}"));
-    }
-    
-    @Test
-    public void insertar() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        
-        Bahia bahia = new Bahia();
-        bahia.setNumero(2);
-        bahia.setEstado("Disponible");
-        bahia.setIdTipo(1);
-        
-        String bahiaString = mapper.writeValueAsString(bahia);
-        
-         mockMvc.perform(post("/bahias").contentType(MediaType.APPLICATION_JSON).content(bahiaString))
+    public void ingresar() throws Exception {        
+        mockMvc.perform(post("/tipos").contentType(MediaType.APPLICATION_JSON).content(TestBuilder.objectToJson(TestBuilder.toTipo())))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{'payload': {'mensaje': 'Registro exitoso','codigo': 200}}"));
     }

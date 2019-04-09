@@ -1,5 +1,6 @@
 package co.com.ceiba.estacionamiento.test.servicio;
 
+import co.com.ceiba.estacionamiento.builder.TestBuilder;
 import static org.junit.Assert.*;
 
 import java.util.List;
@@ -27,9 +28,7 @@ public class TestServiceBahia {
 	 * Test que lista todas las bahias
 	 */
 	@Test
-	public void listarTodasLasBahias() {
-		System.out.println();
-
+	public void listar() {
 		// Act
 		List<Bahia> bahias = serviceBahia.listar();
 
@@ -41,5 +40,21 @@ public class TestServiceBahia {
 		// Assert
 		assertEquals(contadorBahias, serviceBahia.contar());
 	}
+        
+        /**
+	 * Test que inserta una bahia
+	 */
+	@Test
+	public void insertarActualizar() {
+                // Arrange
+                assertEquals(1, serviceBahia.contar());
 
+		// Act
+                Bahia bahia = TestBuilder.toBahia();
+		serviceBahia.insertar(bahia);
+                serviceBahia.actualizar(TestBuilder.toBahiaModificada(bahia));
+
+		// Assert
+		assertEquals(2, serviceBahia.contar());
+	}
 }

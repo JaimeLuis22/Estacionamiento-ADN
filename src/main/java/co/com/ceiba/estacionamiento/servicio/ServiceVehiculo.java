@@ -274,11 +274,11 @@ public class ServiceVehiculo {
      * @return valorAPagar
      */
     private double valorAPagar(boolean esCarro, int dias, int horasObtenidas, String cilindraje) {
-        double horaCarro = Double.valueOf(CodesApp.INFO_VEHICULO_HORA_CARRO.getMensaje());
-        double horaMoto = Double.valueOf(CodesApp.INFO_VEHICULO_HORA_MOTO.getMensaje());
-        double diaCarro = Double.valueOf(CodesApp.INFO_VEHICULO_DIA_CARRO.getMensaje());
-        double diaMoto = Double.valueOf(CodesApp.INFO_VEHICULO_DIA_MOTO.getMensaje());
-        double motoAdicional = Double.valueOf(CodesApp.INFO_VEHICULO_MOTO_ADICIONAL.getMensaje());
+        double horaCarro = Double.parseDouble(CodesApp.INFO_VEHICULO_HORA_CARRO.getMensaje());
+        double horaMoto = Double.parseDouble(CodesApp.INFO_VEHICULO_HORA_MOTO.getMensaje());
+        double diaCarro = Double.parseDouble(CodesApp.INFO_VEHICULO_DIA_CARRO.getMensaje());
+        double diaMoto = Double.parseDouble(CodesApp.INFO_VEHICULO_DIA_MOTO.getMensaje());
+        double motoAdicional = Double.parseDouble(CodesApp.INFO_VEHICULO_MOTO_ADICIONAL.getMensaje());
         double valorPagar;
 
         if (esCarro) {

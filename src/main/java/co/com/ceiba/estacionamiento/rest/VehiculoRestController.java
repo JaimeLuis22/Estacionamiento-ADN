@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +36,7 @@ public class VehiculoRestController {
 	 * @return
 	 */
 	@GetMapping("/vehiculos")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<DTOResponseContainer> obtenerVehiculos() {
 		List<Vehiculo> lista = serviceVehiculo.listar();
 		if (lista.isEmpty()) {
@@ -50,7 +52,8 @@ public class VehiculoRestController {
 	 * @param vehiculo
 	 * @return
 	 */
-	@PostMapping(path = "/vehiculos")
+	@PostMapping("/vehiculos")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<DTOResponseContainer> registrarVehiculo(@RequestBody Vehiculo vehiculo) {
 		serviceVehiculo.insertar(vehiculo);
 		return new ResponseEntity<>(
@@ -64,7 +67,8 @@ public class VehiculoRestController {
 	 * @param vehiculo
 	 * @return
 	 */
-	@PutMapping("/salida-vehiculo")
+	@PutMapping("/vehiculos/salida")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<DTOResponseContainer> salidaVehiculo(@RequestBody Vehiculo vehiculo) {
 		double costo = serviceVehiculo.salida(vehiculo);
 		return new ResponseEntity<>(DTOBuilder.toDTOResponseContainer(String.valueOf(costo), HttpStatus.OK.value()),
@@ -77,7 +81,8 @@ public class VehiculoRestController {
 	 * @param placa
 	 * @return
 	 */
-	@GetMapping("/vehiculo/{placa}")
+	@GetMapping("/vehiculos/{placa}")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<DTOResponseContainer> obtenerVehiculoPorPlaca(@PathVariable("placa") String placa) {
 		Vehiculo vehiculo = new Vehiculo();
 		vehiculo.setPlaca(placa);

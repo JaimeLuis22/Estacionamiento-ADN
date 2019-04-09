@@ -1,5 +1,6 @@
 package co.com.ceiba.estacionamiento.test.dao;
 
+import co.com.ceiba.estacionamiento.builder.TestBuilder;
 import static org.junit.Assert.*;
 
 import java.util.List;
@@ -47,21 +48,16 @@ public class TestDaoVehiculo {
 		System.out.println();
 
 		// Arrange
-		// El script de datos tiene 1 registro
 		assertEquals(1, daoVehiculo.countVehiculos());
 
 		// Act
-		Vehiculo vehiculo = new Vehiculo();
-		vehiculo.setPlaca("uyt122");
-		vehiculo.setIdTipo(1);
-		vehiculo.setIdBahia(1);
+		Vehiculo vehiculo = TestBuilder.toVehiculo();
 		daoVehiculo.insertVehiculo(vehiculo);
 
 		// Recuperamos el vehiculo recien insertado por su placa
 		vehiculo = daoVehiculo.findVehiculoByPlaca(vehiculo);
 
 		// Assert
-		// Deberia existir 2 vehiculos
 		assertEquals(2, daoVehiculo.countVehiculos());
 	}
 
@@ -71,10 +67,7 @@ public class TestDaoVehiculo {
 		System.out.println();
 
 		// Act
-		Vehiculo vehiculo = new Vehiculo();
-		vehiculo.setPlaca("uyt122");
-		vehiculo.setIdTipo(1);
-		vehiculo.setIdBahia(1);
+		Vehiculo vehiculo = TestBuilder.toVehiculo();
 
 		// Assert
 		assertNull(daoVehiculo.findVehiculoByPlaca(vehiculo));

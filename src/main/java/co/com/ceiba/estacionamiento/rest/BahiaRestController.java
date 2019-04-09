@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,7 @@ public class BahiaRestController {
 	 * @return
 	 */
 	@GetMapping("/bahias")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<DTOResponseContainer> obtenerBahias() {
 		List<Bahia> lista = serviceBahia.listar();
 		if (lista.isEmpty()) {
@@ -51,6 +53,7 @@ public class BahiaRestController {
 	 * @return
 	 */
 	@PostMapping(path = "/bahias")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<DTOResponseContainer> registroBahia(@RequestBody Bahia bahia) {
 		serviceBahia.insertar(bahia);
 		return new ResponseEntity<>(
@@ -64,7 +67,8 @@ public class BahiaRestController {
 	 * @param numero
 	 * @return
 	 */
-	@GetMapping("/bahia/{numero}")
+	@GetMapping("/bahias/{numero}")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<DTOResponseContainer> bahiaPorNumero(@PathVariable("numero") int numero) {
 		Bahia bahia = new Bahia();
 		bahia.setNumero(numero);

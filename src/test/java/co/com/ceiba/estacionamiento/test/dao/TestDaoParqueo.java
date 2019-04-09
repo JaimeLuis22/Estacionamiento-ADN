@@ -64,4 +64,16 @@ public class TestDaoParqueo {
 		// Assert
 		assertEquals(1, parqueo.getIdParqueo());
 	}
+	
+	@Test
+    public void eliminar() {
+    	// Arrange
+    	String mensaje = "eliminado";
+    	
+        // Act
+        String respuesta = daoParqueo.deleteParqueo(TestBuilder.toParqueo());
+
+        // Assert
+        assertEquals(mensaje, respuesta);
+    }
 }

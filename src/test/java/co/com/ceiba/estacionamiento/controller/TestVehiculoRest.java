@@ -1,8 +1,6 @@
 package co.com.ceiba.estacionamiento.controller;
 
 import co.com.ceiba.estacionamiento.builder.TestBuilder;
-import co.com.ceiba.estacionamiento.dominio.Vehiculo;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

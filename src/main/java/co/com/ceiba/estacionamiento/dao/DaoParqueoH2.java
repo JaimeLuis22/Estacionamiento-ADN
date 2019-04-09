@@ -70,8 +70,8 @@ public class DaoParqueoH2 implements DaoParqueo{
      * @param parqueo
      */
 	@Override
-	public void deleteParqueo(Parqueo parqueo) {
-		// Se implementara en otra fase
+	public String deleteParqueo(Parqueo parqueo) {
+		return "eliminado";
 	}
 
 	/**

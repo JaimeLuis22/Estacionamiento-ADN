@@ -201,4 +201,19 @@ public class TestServiceVehiculo {
         }
         
     }
+    
+    /**
+	 * Test que elimina un vehiculo
+	 */
+	@Test
+	public void eliminar() {
+		// Arrange
+		String mensaje = "eliminado";
+
+		// Act
+		String respuesta = serviceVehiculo.eliminar(TestBuilder.toVehiculo());
+
+		// Assert
+		assertEquals(mensaje, respuesta);
+	}
 }

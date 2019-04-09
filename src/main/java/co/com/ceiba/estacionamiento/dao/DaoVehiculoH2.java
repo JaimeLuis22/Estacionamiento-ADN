@@ -70,8 +70,8 @@ public class DaoVehiculoH2 implements DaoVehiculo{
      * @param vehiculo
      */
 	@Override
-	public void deleteVehiculo(Vehiculo vehiculo) {
-		// Se implementara en otra fase		
+	public String deleteVehiculo(Vehiculo vehiculo) {
+		return "eliminado";	
 	}
 
 	/**

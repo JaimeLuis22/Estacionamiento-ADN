@@ -71,5 +71,17 @@ public class TestDaoTipo {
 		// Assert
 		assertEquals(nombre, daoTipo.findTipoById(idTipo).getNombre());
 	}
+	
+	@Test
+    public void eliminar() {
+    	// Arrange
+    	String mensaje = "eliminado";
+    	
+        // Act
+        String respuesta = daoTipo.deleteTipo(TestBuilder.toTipo());
+
+        // Assert
+        assertEquals(mensaje, respuesta);
+    }
 
 }

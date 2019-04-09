@@ -40,21 +40,36 @@ public class TestServiceBahia {
 		// Assert
 		assertEquals(contadorBahias, serviceBahia.contar());
 	}
-        
-        /**
+
+	/**
 	 * Test que inserta una bahia
 	 */
 	@Test
 	public void insertarActualizar() {
-                // Arrange
-                assertEquals(1, serviceBahia.contar());
+		// Arrange
+		assertEquals(1, serviceBahia.contar());
 
 		// Act
-                Bahia bahia = TestBuilder.toBahia();
+		Bahia bahia = TestBuilder.toBahia();
 		serviceBahia.insertar(bahia);
-                serviceBahia.actualizar(TestBuilder.toBahiaModificada(bahia));
+		serviceBahia.actualizar(TestBuilder.toBahiaModificada(bahia));
 
 		// Assert
 		assertEquals(2, serviceBahia.contar());
+	}
+	
+	/**
+	 * Test que elimina una bahia
+	 */
+	@Test
+	public void eliminar() {
+		// Arrange
+		String mensaje = "eliminado";
+
+		// Act
+		String respuesta = serviceBahia.eliminar(TestBuilder.toBahia());
+
+		// Assert
+		assertEquals(mensaje, respuesta);
 	}
 }

@@ -23,7 +23,7 @@ public interface DaoVehiculo {
      * Metodo que elimina un vehiculo en la base de datos
      * @param vehiculo
      */
-    void deleteVehiculo(Vehiculo vehiculo);
+    String deleteVehiculo(Vehiculo vehiculo);
 
     /**
      * Metodo que encuentra un vehiculo por la placa

@@ -23,7 +23,7 @@ public interface DaoTipo {
      * Metodo que elimina un tipo en la base de datos
      * @param tipo
      */
-    void deleteTipo(Tipo tipo);
+    String deleteTipo(Tipo tipo);
 
     /**
      * Metodo que encuentra un tipo por el nombre

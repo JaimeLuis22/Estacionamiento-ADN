@@ -72,4 +72,16 @@ public class TestDaoVehiculo {
 		// Assert
 		assertNull(daoVehiculo.findVehiculoByPlaca(vehiculo));
 	}
+	
+	@Test
+    public void eliminar() {
+    	// Arrange
+    	String mensaje = "eliminado";
+    	
+        // Act
+        String respuesta = daoVehiculo.deleteVehiculo(TestBuilder.toVehiculo());
+
+        // Assert
+        assertEquals(mensaje, respuesta);
+    }
 }

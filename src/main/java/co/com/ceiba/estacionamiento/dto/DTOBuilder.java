@@ -5,7 +5,7 @@ public class DTOBuilder {
     /**
      * Constructor
      */
-    public DTOBuilder() {
+    private DTOBuilder() {
         // Constructor vacio
     }
 

@@ -26,7 +26,7 @@ public interface DaoBahia {
      *
      * @param bahia
      */
-    void deleteBahia(Bahia bahia);
+    String deleteBahia(Bahia bahia);
 
     /**
      * Metodo que encuentra una bahia por el numero

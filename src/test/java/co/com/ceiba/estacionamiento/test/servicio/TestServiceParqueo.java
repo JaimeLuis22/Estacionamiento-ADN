@@ -89,4 +89,19 @@ public class TestServiceParqueo {
         // Assert
         assertNotNull(parqueo);
     }
+    
+    /**
+	 * Test que elimina una parqueo
+	 */
+	@Test
+	public void eliminar() {
+		// Arrange
+		String mensaje = "eliminado";
+
+		// Act
+		String respuesta = serviceParqueo.eliminar(TestBuilder.toParqueo());
+
+		// Assert
+		assertEquals(mensaje, respuesta);
+	}
 }

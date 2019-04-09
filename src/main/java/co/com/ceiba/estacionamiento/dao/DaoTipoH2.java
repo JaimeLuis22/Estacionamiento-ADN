@@ -70,8 +70,8 @@ public class DaoTipoH2 implements DaoTipo{
      * @param tipo
      */
 	@Override
-	public void deleteTipo(Tipo tipo) {
-		// Se implementara en otra fase
+	public String deleteTipo(Tipo tipo) {
+		return "eliminado";
 	}
 
 	/**

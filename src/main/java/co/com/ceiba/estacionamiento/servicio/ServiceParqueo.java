@@ -38,8 +38,8 @@ public class ServiceParqueo{
      * Metodo que elimina un parqueo
      * @param parqueo
      */
-	public void eliminar(Parqueo parqueo) {
-		daoParqueo.deleteParqueo(parqueo);
+	public String eliminar(Parqueo parqueo) {
+		return daoParqueo.deleteParqueo(parqueo);
 	}
 
 	 /**

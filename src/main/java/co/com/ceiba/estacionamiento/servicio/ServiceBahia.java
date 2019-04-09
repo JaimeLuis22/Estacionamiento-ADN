@@ -59,8 +59,8 @@ public class ServiceBahia{
      * Metodo que elimina una bahia
      * @param bahia
      */
-	public void eliminar(Bahia bahia) {
-		daoBahia.deleteBahia(bahia);		
+	public String eliminar(Bahia bahia) {
+		return daoBahia.deleteBahia(bahia);		
 	}
 
 	/**

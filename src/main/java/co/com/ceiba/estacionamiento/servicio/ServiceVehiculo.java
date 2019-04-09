@@ -92,8 +92,8 @@ public class ServiceVehiculo {
      *
      * @param vehiculo
      */
-    public void eliminar(Vehiculo vehiculo) {
-        daoVehiculo.deleteVehiculo(vehiculo);
+    public String eliminar(Vehiculo vehiculo) {
+        return daoVehiculo.deleteVehiculo(vehiculo);
     }
 
     /**

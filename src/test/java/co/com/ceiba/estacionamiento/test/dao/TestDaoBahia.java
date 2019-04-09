@@ -103,4 +103,16 @@ public class TestDaoBahia {
         // Assert
         assertNotNull(bahia);
     }
+    
+    @Test
+    public void eliminar() {
+    	// Arrange
+    	String mensaje = "eliminado";
+    	
+        // Act
+        String respuesta = daoBahia.deleteBahia(TestBuilder.toBahia());
+
+        // Assert
+        assertEquals(mensaje, respuesta);
+    }
 }

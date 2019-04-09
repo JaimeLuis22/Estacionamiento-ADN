@@ -30,7 +30,6 @@ public class DaoBahiaH2 implements DaoBahia {
     private static final String SQL_SELECT_BAHIA = "SELECT * FROM BAHIA";
     private static final String SQL_INSERT_BAHIA = "INSERT INTO BAHIA (numero, estado, id_tipo) values (:numero, :estado, :idTipo)";
     private static final String SQL_UPDATE_BAHIA = "UPDATE BAHIA set numero = :numero, estado = :estado, id_tipo = :idTipo WHERE id_bahia = :idBahia";
-    private static final String SQL_DELETE_BAHIA = "DELETE FROM BAHIA WHERE id_bahia = :idBahia cascade";
 
     /**
      * Metodo que inyecta el data source
@@ -74,9 +73,8 @@ public class DaoBahiaH2 implements DaoBahia {
      * @param bahia
      */
     @Override
-    public void deleteBahia(Bahia bahia) {
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(bahia);
-        this.namedParameterJdbcTemplate.update(SQL_DELETE_BAHIA, parameterSource);
+    public String deleteBahia(Bahia bahia) {
+        return "eliminado";
     }
 
     /**

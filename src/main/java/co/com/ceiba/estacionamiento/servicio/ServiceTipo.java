@@ -54,8 +54,8 @@ public class ServiceTipo{
 	/**
      * Metodo que elimina un tipo
      */
-	public void eliminar(Tipo tipo) {
-		daoTipo.deleteTipo(tipo);		
+	public String eliminar(Tipo tipo) {
+		return daoTipo.deleteTipo(tipo);		
 	}
 	
 }

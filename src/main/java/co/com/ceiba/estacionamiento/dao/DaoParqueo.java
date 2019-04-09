@@ -23,7 +23,7 @@ public interface DaoParqueo {
      * Metodo que elimina un parqueo en la base de datos
      * @param parqueo
      */
-    void deleteParqueo(Parqueo parqueo);
+    String deleteParqueo(Parqueo parqueo);
 
     /**
      * Metodo que encuentra un parqueo por el id

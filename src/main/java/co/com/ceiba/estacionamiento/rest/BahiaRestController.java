@@ -38,11 +38,6 @@ public class BahiaRestController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<DTOResponseContainer> obtenerBahias() {
 		List<Bahia> lista = serviceBahia.listar();
-		if (lista.isEmpty()) {
-			return new ResponseEntity<>(
-					DTOBuilder.toDTOResponseContainer(CodesApp.INFO_NO_REGISTRO.getMensaje(), HttpStatus.OK.value()),
-					HttpStatus.OK);
-		}
 		return new ResponseEntity<>(DTOBuilder.toDTOResponseContainer(lista), HttpStatus.OK);
 	}
 
@@ -73,11 +68,6 @@ public class BahiaRestController {
 		Bahia bahia = new Bahia();
 		bahia.setNumero(numero);
 		bahia = serviceBahia.recuperarPorNumero(bahia);
-		if (bahia == null) {
-			return new ResponseEntity<>(
-					DTOBuilder.toDTOResponseContainer(CodesApp.INFO_NO_REGISTRO.getMensaje(), HttpStatus.OK.value()),
-					HttpStatus.OK);
-		}
 		return new ResponseEntity<>(DTOBuilder.toDTOResponseContainer(bahia), HttpStatus.OK);
 	}
 }

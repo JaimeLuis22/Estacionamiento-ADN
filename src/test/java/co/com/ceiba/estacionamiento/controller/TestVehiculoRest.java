@@ -59,4 +59,16 @@ public class TestVehiculoRest {
         mockMvc.perform(put("/vehiculos/salida").contentType(MediaType.APPLICATION_JSON).content(TestBuilder.objectToJson(TestBuilder.toVehiculoExistente())))
                 .andExpect(status().isOk());
     }
+    
+    @Test
+    public void vehiculoConCilindrajeVacio() throws Exception {        
+        mockMvc.perform(post("/vehiculos").contentType(MediaType.APPLICATION_JSON).content(TestBuilder.objectToJson(TestBuilder.toVehiculoMotoSinCilindraje())))
+        		.andExpect(content().json("{'payload': {'mensaje': 'Cilindraje vacio','codigo': 400}}"));
+    }
+    
+    @Test
+    public void errorInterno() throws Exception {        
+        mockMvc.perform(post("/vehiculos/1").contentType(MediaType.APPLICATION_JSON).content(TestBuilder.objectToJson(TestBuilder.toVehiculoMotoSinCilindraje())))
+        		.andExpect(content().json("{'payload': {'mensaje': 'Error interno','codigo': 500}}"));
+    }
 }

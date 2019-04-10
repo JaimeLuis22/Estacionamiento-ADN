@@ -37,10 +37,6 @@ public class TipoRestController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<DTOResponseContainer> obtenerTipos() {
 		List<Tipo> lista = serviceTipo.listar();
-		if (lista.isEmpty()) {
-			return new ResponseEntity<>(DTOBuilder.toDTOResponseContainer(
-					CodesApp.INFO_NO_REGISTRO.getMensaje(), HttpStatus.OK.value()), HttpStatus.OK);
-		}
 		return new ResponseEntity<>(DTOBuilder.toDTOResponseContainer(lista), HttpStatus.OK);
 	}
 	

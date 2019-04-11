@@ -1,6 +1,13 @@
 package co.com.ceiba.estacionamiento.dto;
 
 public final class DTOBuilder {
+	
+	/**
+	 * Constructor
+	 */
+	private DTOBuilder(){
+		// Constructor vacio
+	}
 
     /**
      * Metodo que retorna el DTOResponseContainer recibiendo como parametro un

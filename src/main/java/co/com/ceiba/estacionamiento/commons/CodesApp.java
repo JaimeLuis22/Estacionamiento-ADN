@@ -22,7 +22,8 @@ public enum CodesApp {
 	INFO_FECHA_FORMATO(17, "yyyy-MM-dd HH:mm:ss"),
 	INFO_FECHA_FORMATO_DIA(18, "EEE"),
 	INFO_NO_REGISTRO(19, "No existe registro"),
-        INFO_EXISTE_REGISTRO(20, "Existe el registro"),
+    INFO_EXISTE_REGISTRO(20, "Existe el registro"),
+    
 	// Vehiculo	
 	INFO_VEHICULO_MOTO(22, "Moto"),
 	INFO_VEHICULO_CARRO(23, "Carro"),
@@ -33,7 +34,8 @@ public enum CodesApp {
 	INFO_VEHICULO_DIA_MOTO(28, "4000"),
 	INFO_VEHICULO_MOTO_ADICIONAL(29, "2000"),
 	INFO_VEHICULO_NO_COBRO(30, "Vehiculo no genera cobro"),
-	INFO_VEHICULO_MOTO_CILINDRAJE(31, "Cilindraje vacio"),	
+	INFO_VEHICULO_MOTO_CILINDRAJE(31, "Cilindraje vacio"),
+	
 	// Bahia
 	INFO_BAHIA_NO_DISPONIBLES(40, "No hay bahias disponibles");
 	

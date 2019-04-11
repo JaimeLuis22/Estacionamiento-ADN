@@ -22,28 +22,32 @@ import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 @Repository
 public class DaoParqueoH2 implements DaoParqueo{
 	
+	// Propiedad que escribe en el log
 	private static final Logger LOGGER = LoggerFactory.getLogger(DaoParqueoH2.class);
+	
+	// Manejo de parametros por nombre
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	// Manejo de parametros por indice
     private JdbcTemplate jdbcTemplate;
+    
+    // Sql para consultar en base de datos
+    private static final String SQL_COUNT_PARQUEO 				= "SELECT count(*) FROM PARQUEO";
+    private static final String SQL_SELECT_PARQUEO 				= "SELECT * FROM PARQUEO";    
+    private static final String SQL_INSERT_PARQUEO 				= "INSERT INTO PARQUEO (fecha_inicial, fecha_fin, costo, estado, id_vehiculo) values (:fechaInicial, :fechaFin, :costo, :estado, :idVehiculo)";
+    private static final String SQL_UPDATE_PARQUEO 				= "UPDATE PARQUEO set fecha_inicial = :fechaInicial, fecha_fin = :fechaFin, costo = :costo, estado = :estado WHERE id_parqueo = :idParqueo";
+    private static final String SQL_FIND_PARQUEO_BY_ID 			= "SELECT * FROM PARQUEO WHERE id_parqueo = ?";
+    private static final String SQL_FIND_PARQUEO_BY_ID_VEHICULO = "SELECT * FROM PARQUEO WHERE id_vehiculo = ?";
     
     /**
      * Metodo que inyecta el data source
      * @param dataSource
      */
     @Autowired
-    public void setDataSource(DataSource dataSource) {        
-        // Manejo de parametros por indice
+    public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-        
-        // Manejo de parametros por nombre
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
-    
-    private static final String SQL_SELECT_PARQUEO = "SELECT * FROM PARQUEO";
-    
-    private static final String SQL_INSERT_PARQUEO = "INSERT INTO PARQUEO (fecha_inicial, fecha_fin, costo, estado, id_vehiculo) values (:fechaInicial, :fechaFin, :costo, :estado, :idVehiculo)";
-    
-    private static final String SQL_UPDATE_PARQUEO = "UPDATE PARQUEO set fecha_inicial = :fechaInicial, fecha_fin = :fechaFin, costo = :costo, estado = :estado WHERE id_parqueo = :idParqueo";
     
     /**
 	 * Metodo que inserta un parqueo en la base de datos
@@ -83,14 +87,11 @@ public class DaoParqueoH2 implements DaoParqueo{
 	public Parqueo findParqueoById(long idParqueo) throws EstacionamientoException{
 		Parqueo parqueo = null;
 		try {
-			String sql = "SELECT * FROM PARQUEO WHERE id_parqueo = ?";
-        
 			BeanPropertyRowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);   
-			parqueo = jdbcTemplate.queryForObject(sql, parqueoRowMapper, idParqueo);
+			parqueo = jdbcTemplate.queryForObject(SQL_FIND_PARQUEO_BY_ID, parqueoRowMapper, idParqueo);
 		} catch (EmptyResultDataAccessException e) {
 			LOGGER.error("[DaoParqueoH2][findParqueoById] Excepcion: "+e.getMessage(), e);
-		}	
-        
+		}
         return parqueo;
 	}
 
@@ -110,9 +111,7 @@ public class DaoParqueoH2 implements DaoParqueo{
      */
 	@Override
 	public int countParqueos() {
-		String sql = "SELECT count(*) FROM PARQUEO";
-
-        return this.jdbcTemplate.queryForObject(sql, Integer.class);
+        return this.jdbcTemplate.queryForObject(SQL_COUNT_PARQUEO, Integer.class);
 	}
 
 	/**
@@ -123,17 +122,12 @@ public class DaoParqueoH2 implements DaoParqueo{
 	@Override
 	public Parqueo findParqueoByIdVehiculo(int idVehiculo) {
 		Parqueo parqueo = null;
-		String sql = "SELECT * FROM PARQUEO WHERE id_vehiculo = ?";
-		
 		try {
 			BeanPropertyRowMapper<Parqueo> parqueoRowMapper = BeanPropertyRowMapper.newInstance(Parqueo.class);   
-	        parqueo = jdbcTemplate.queryForObject(sql, parqueoRowMapper, idVehiculo);
+	        parqueo = jdbcTemplate.queryForObject(SQL_FIND_PARQUEO_BY_ID_VEHICULO, parqueoRowMapper, idVehiculo);
 		} catch (EmptyResultDataAccessException e) {
 			LOGGER.error("[DaoParqueoH2][findParqueoByIdVehiculo] Excepcion: "+e.getMessage(), e);
 		}		
-		
         return parqueo;
 	}
-
-	
 }

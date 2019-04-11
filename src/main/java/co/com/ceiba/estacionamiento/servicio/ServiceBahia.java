@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.servicio;
+package co.com.ceiba .estacionamiento.servicio;
 
 import java.util.List;
 
@@ -36,11 +36,11 @@ public class ServiceBahia{
 		Tipo tipo = daoTipo.findTipoById((long)bahia.getIdTipo());
 		int numeroBahias = daoBahia.countBahiasByIdTipo(bahia.getIdTipo());
 		
-		if("Carro".equals(tipo.getNombre()) && numeroBahias > 20) {
+		if(CodesApp.INFO_VEHICULO_CARRO.getMensaje().equals(tipo.getNombre()) && numeroBahias == 20) {
 			throw new EstacionamientoException("No se puede registrar. Ha superado el limite de inserciones", CodesApp.ERROR_NEG_401.getCodigo());
 		}
 		
-		if("Moto".equals(tipo.getNombre()) && numeroBahias > 10) {
+		if(CodesApp.INFO_VEHICULO_MOTO.getMensaje().equals(tipo.getNombre()) && numeroBahias == 10) {
 			throw new EstacionamientoException("No se puede registrar. Ha superado el limite de inserciones", CodesApp.ERROR_NEG_401.getCodigo());
 		}
 		

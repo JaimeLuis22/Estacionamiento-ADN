@@ -48,6 +48,12 @@ public class TestVehiculoRest {
     }
     
     @Test
+    public void validacionPlacaA() throws Exception {        
+        mockMvc.perform(post("/vehiculos").contentType(MediaType.APPLICATION_JSON).content(TestBuilder.objectToJson(TestBuilder.toVehiculoPlacaA())))
+        		.andExpect(content().json("{'payload': {'mensaje': 'Autorizacion negada','codigo': 401}}"));
+    }
+    
+    @Test
     public void ingresar() throws Exception {        
         mockMvc.perform(post("/vehiculos").contentType(MediaType.APPLICATION_JSON).content(TestBuilder.objectToJson(TestBuilder.toVehiculo())))
                 .andExpect(status().isOk())

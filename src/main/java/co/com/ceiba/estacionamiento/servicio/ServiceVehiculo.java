@@ -103,12 +103,7 @@ public class ServiceVehiculo {
      * @return
      */
     public Vehiculo encontrarPorPlaca(Vehiculo vehiculo) throws EstacionamientoException {
-        Vehiculo vehiculoR = daoVehiculo.findVehiculoByPlaca(vehiculo);
-        if (vehiculoR == null) {
-            throw new EstacionamientoException(CodesApp.INFO_NO_REGISTRO.getMensaje(), CodesApp.ERROR_NEG_400.getCodigo());
-        }
-
-        return vehiculoR;
+        return daoVehiculo.findVehiculoByPlaca(vehiculo);
     }
 
     /**
@@ -175,10 +170,10 @@ public class ServiceVehiculo {
             SimpleDateFormat formatoFecha = new SimpleDateFormat(CodesApp.INFO_FECHA_FORMATO_DIA.getMensaje());
             String dia = formatoFecha.format(fechaSistema).toLowerCase();
 
-            if (CodesApp.INFO_SUNDAY.getMensaje().equals(dia)) {
+            if (!CodesApp.INFO_SUNDAY.getMensaje().equals(dia)) {
                 throw new EstacionamientoException(CodesApp.ERROR_NEG_401.getMensaje(), CodesApp.ERROR_NEG_401.getCodigo());
             }
-            if (CodesApp.INFO_MONDAY.getMensaje().equals(dia)) {
+            if (!CodesApp.INFO_MONDAY.getMensaje().equals(dia)) {
                 throw new EstacionamientoException(CodesApp.ERROR_NEG_401.getMensaje(), CodesApp.ERROR_NEG_401.getCodigo());
             }
         }

@@ -21,16 +21,26 @@ import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 
 @Repository
 public class DaoBahiaH2 implements DaoBahia {
-
+	
+	// Propiedad que escribe en el log
     private static final Logger LOGGER = LoggerFactory.getLogger(DaoBahiaH2.class);
+    
+    // Manejo de parametros por nombre 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    
+    // Manejo de parametros por indice
     private JdbcTemplate jdbcTemplate;
-    private static final String SQL_COUNT_BAHIA = "SELECT count(*) FROM BAHIA";
-    private static final String SQL_FIND_BAHIA_BY_NUMERO = "SELECT * FROM BAHIA WHERE numero = :numero";
-    private static final String SQL_SELECT_BAHIA = "SELECT * FROM BAHIA";
-    private static final String SQL_INSERT_BAHIA = "INSERT INTO BAHIA (numero, estado, id_tipo) values (:numero, :estado, :idTipo)";
-    private static final String SQL_UPDATE_BAHIA = "UPDATE BAHIA set numero = :numero, estado = :estado, id_tipo = :idTipo WHERE id_bahia = :idBahia";
-
+    
+    // Sql para consultar en base de datos
+    private static final String SQL_COUNT_BAHIA 				= "SELECT count(*) FROM BAHIA";
+    private static final String SQL_SELECT_BAHIA 				= "SELECT * FROM BAHIA";
+    private static final String SQL_INSERT_BAHIA 				= "INSERT INTO BAHIA (numero, estado, id_tipo) values (:numero, :estado, :idTipo)";
+    private static final String SQL_UPDATE_BAHIA 				= "UPDATE BAHIA set numero = :numero, estado = :estado, id_tipo = :idTipo WHERE id_bahia = :idBahia";
+    private static final String SQL_FIND_BAHIA_BY_ID 			= "SELECT * FROM BAHIA WHERE id_bahia = ?";
+    private static final String SQL_FIND_BAHIA_BY_NUMERO 		= "SELECT * FROM BAHIA WHERE numero = :numero";
+    private static final String SQL_COUNT_BAHIA_BY_ID_TIPO 		= "SELECT count(*) FROM BAHIA WHERE id_tipo = ?";
+    private static final String SQL_COUNT_BAHIA_BY_ID_TIPO_STATE = "SELECT count(*) FROM BAHIA WHERE id_tipo = ? AND estado = ?";
+    
     /**
      * Metodo que inyecta el data source
      *
@@ -38,10 +48,7 @@ public class DaoBahiaH2 implements DaoBahia {
      */
     @Autowired
     public void setDataSource(DataSource dataSource) {
-        // Manejo de parametros por indice
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-
-        // Manejo de parametros por nombre
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
@@ -87,11 +94,9 @@ public class DaoBahiaH2 implements DaoBahia {
     public Bahia findBahiaByNumero(Bahia bahia) throws EstacionamientoException {
         Bahia bahiaRes = null;
         try {
-            String sql = SQL_FIND_BAHIA_BY_NUMERO;
             SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(bahia);
-
             RowMapper<Bahia> bahiaRowMapper = BeanPropertyRowMapper.newInstance(Bahia.class);
-            bahiaRes = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, bahiaRowMapper);
+            bahiaRes = this.namedParameterJdbcTemplate.queryForObject(SQL_FIND_BAHIA_BY_NUMERO, namedParameters, bahiaRowMapper);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error("[DaoBahiaH2][findBahiaByNumero] Excepcion: " + e.getMessage(), e);
         }
@@ -117,9 +122,7 @@ public class DaoBahiaH2 implements DaoBahia {
      */
     @Override
     public int countBahias() {
-        String sql = SQL_COUNT_BAHIA;
-
-        return this.jdbcTemplate.queryForObject(sql, Integer.class);
+        return this.jdbcTemplate.queryForObject(SQL_COUNT_BAHIA, Integer.class);
     }
 
     /**
@@ -131,11 +134,8 @@ public class DaoBahiaH2 implements DaoBahia {
     @Override
     public Bahia findBahiaById(long idBahia) {
         Bahia bahia = null;
-        String sql = "SELECT * FROM BAHIA WHERE id_bahia = ?";
-
         BeanPropertyRowMapper<Bahia> bahiaRowMapper = BeanPropertyRowMapper.newInstance(Bahia.class);
-        bahia = jdbcTemplate.queryForObject(sql, bahiaRowMapper, idBahia);
-
+        bahia = jdbcTemplate.queryForObject(SQL_FIND_BAHIA_BY_ID, bahiaRowMapper, idBahia);
         return bahia;
     }
 
@@ -147,8 +147,7 @@ public class DaoBahiaH2 implements DaoBahia {
      */
     @Override
     public int countBahiasByIdTipo(int idTipo) {
-        String sql = "SELECT count(*) FROM BAHIA WHERE id_tipo = ?";
-        return this.jdbcTemplate.queryForObject(sql, Integer.class, idTipo);
+        return this.jdbcTemplate.queryForObject(SQL_COUNT_BAHIA_BY_ID_TIPO, Integer.class, idTipo);
     }
 
     /**
@@ -159,7 +158,6 @@ public class DaoBahiaH2 implements DaoBahia {
      */
     @Override
     public int countBahiasByIdTipoState(int idTipo) {
-        String sql = "SELECT count(*) FROM BAHIA WHERE id_tipo = ? AND estado = ?";
-        return this.jdbcTemplate.queryForObject(sql, Integer.class, idTipo, "Disponible");
+        return this.jdbcTemplate.queryForObject(SQL_COUNT_BAHIA_BY_ID_TIPO_STATE, Integer.class, idTipo, "Disponible");
     }
 }

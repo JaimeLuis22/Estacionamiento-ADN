@@ -21,28 +21,32 @@ import co.com.ceiba.estacionamiento.excepcion.EstacionamientoException;
 @Repository
 public class DaoTipoH2 implements DaoTipo{
 	
+	// Propiedad que escribe en el log
 	private static final Logger LOGGER = LoggerFactory.getLogger(DaoTipoH2.class);
+	
+	// Manejo de parametros por nombre
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	// Manejo de parametros por indice
     private JdbcTemplate jdbcTemplate;
+    
+    // Sql para consultar en base de datos
+    private static final String SQL_COUNT_TIPO 			= "SELECT count(*) FROM TIPO";
+    private static final String SQL_SELECT_TIPO 		= "SELECT * FROM TIPO";    
+    private static final String SQL_INSERT_TIPO 		= "INSERT INTO TIPO (nombre) values (:nombre)";    
+    private static final String SQL_UPDATE_TIPO 		= "UPDATE TIPO set nombre = :nombre WHERE id_tipo = :idTipo";
+    private static final String SQL_FIND_TIPO_BY_ID 	= "SELECT * FROM TIPO WHERE id_tipo = ?";
+    private static final String SQL_FIND_TIPO_BY_NOMBRE = "SELECT * FROM TIPO WHERE nombre = :nombre";
     
     /**
      * Metodo que inyecta el data source
      * @param dataSource
      */
     @Autowired
-    public void setDataSource(DataSource dataSource) {        
-        // Manejo de parametros por indice
+    public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-        
-        // Manejo de parametros por nombre
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
-    
-    private static final String SQL_SELECT_TIPO = "SELECT * FROM TIPO";
-    
-    private static final String SQL_INSERT_TIPO = "INSERT INTO TIPO (nombre) values (:nombre)";
-    
-    private static final String SQL_UPDATE_TIPO = "UPDATE TIPO set nombre = :nombre WHERE id_tipo = :idTipo";
 
     /**
 	 * Metodo que inserta un tipo en la base de datos
@@ -81,18 +85,14 @@ public class DaoTipoH2 implements DaoTipo{
      */
 	@Override
 	public Tipo findTipoByNombre(Tipo tipo) throws EstacionamientoException{
-		Tipo tipoR = null;
-		
+		Tipo tipoR = null;		
 		try {
-			String sql = "SELECT * FROM TIPO WHERE nombre = :nombre";
-			SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(tipo);
-			
+			SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(tipo);			
 			RowMapper<Tipo> tipoRowMapper = BeanPropertyRowMapper.newInstance(Tipo.class);
-			tipoR = this.namedParameterJdbcTemplate.queryForObject(sql, namedParameters, tipoRowMapper);
+			tipoR = this.namedParameterJdbcTemplate.queryForObject(SQL_FIND_TIPO_BY_NOMBRE, namedParameters, tipoRowMapper);
 		} catch (Exception e) {
 			LOGGER.error("[DaoTipoH2][findTipoByNombre] Excepcion: "+e.getMessage(), e);
 		}
-        
         return tipoR;
 	}
 
@@ -112,9 +112,7 @@ public class DaoTipoH2 implements DaoTipo{
      */
 	@Override
 	public int countTipos() {
-		String sql = "SELECT count(*) FROM TIPO";
-
-        return this.jdbcTemplate.queryForObject(sql, Integer.class);
+        return this.jdbcTemplate.queryForObject(SQL_COUNT_TIPO, Integer.class);
 	}
 
 	/**
@@ -125,15 +123,12 @@ public class DaoTipoH2 implements DaoTipo{
 	@Override
 	public Tipo findTipoById(long idTipo) {
 		Tipo tipo = null;
-		String sql = "SELECT * FROM TIPO WHERE id_tipo = ?";
-        
 		try {
 			BeanPropertyRowMapper<Tipo> tipoRowMapper = BeanPropertyRowMapper.newInstance(Tipo.class);   
-			tipo = jdbcTemplate.queryForObject(sql, tipoRowMapper, idTipo);
+			tipo = jdbcTemplate.queryForObject(SQL_FIND_TIPO_BY_ID, tipoRowMapper, idTipo);
 		} catch (Exception e) {
 			LOGGER.error("[DaoTipoH2][findTipoById] Excepcion: "+e.getMessage(), e);
-		}		
-        
+		}        
         return tipo;
 	}
 

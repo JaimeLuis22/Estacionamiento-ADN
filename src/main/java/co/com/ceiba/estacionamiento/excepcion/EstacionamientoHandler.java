@@ -18,6 +18,12 @@ public class EstacionamientoHandler {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EstacionamientoHandler.class);
 	
+	/**
+	 * Metodo que captura las excepciones de tipo EstacionamientoException
+	 * @param ex
+	 * @param request
+	 * @return
+	 */
 	@ExceptionHandler(EstacionamientoException.class)
 	public ResponseEntity<DTOResponseContainer> respuestaEstacionamientoException(EstacionamientoException ex, WebRequest request) {
 		LOGGER.error("[EstacionamientoHandler][respuestaEstacionamientoException] EstacionamientoException: "+ex.getMensaje(), ex);
@@ -40,6 +46,12 @@ public class EstacionamientoHandler {
 		return new ResponseEntity<>(obtenerErrorInterno(contenedor, respuestaGenerica), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	/**
+	 * Metodo que captura las excepciones de tipo Exception
+	 * @param ex
+	 * @param request
+	 * @return
+	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<DTOResponseContainer> respuestaException(Exception ex, WebRequest request) {
 		LOGGER.error("[EstacionamientoHandler][respuestaException] Exception: "+ex.getMessage(), ex);
